@@ -16,4 +16,7 @@
     <string name="bodypart">Bodypart</string>
     <string name="equipment">Equipment needed</string>
     <string name="targetMuscle">Target Muscle</string>
+    <string name="btAdd">Add exercise</string>
+    <string name="tvTitleOfExercise">Exercise</string>
+    <string name="numberOfSets">1</string>
 </resources>

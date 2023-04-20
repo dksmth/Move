@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_exerciseListFragment_to_exerciseInfoFragment"
             app:destination="@id/exerciseInfoFragment" />
+        <action
+            android:id="@+id/action_exerciseListFragment_to_workoutFragment"
+            app:destination="@id/workoutFragment" />
     </fragment>
     <fragment
         android:id="@+id/exerciseInfoFragment"
@@ -26,5 +29,14 @@
         android:id="@+id/workoutFragment"
         android:name="com.example.move.ui.fragments.WorkoutFragment"
         android:label="fragment_workout"
-        tools:layout="@layout/fragment_workout" />
+        tools:layout="@layout/fragment_workout" >
+        <action
+            android:id="@+id/action_workoutFragment_to_exerciseListFragment"
+            app:destination="@id/exerciseListFragment" />
+        <argument
+            android:name="chosenExercise"
+            app:argType="com.example.move.models.ExerciseItem"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>

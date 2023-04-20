@@ -66,6 +66,7 @@ class ExercisesAdapter: RecyclerView.Adapter<ExercisesAdapter.ExerciseViewHolder
         holder: ExerciseViewHolder
     ) {
         val gifUrlHttpsWrapped = "https" + exercise.gifUrl.removeRange(IntRange(0, 3))
+
         Glide.with(holder.itemView)
             .asGif()
             .timeout(6000)

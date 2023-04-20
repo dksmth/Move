@@ -9,10 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.move.R
 import com.example.move.adapters.ExercisesAdapter
 import com.example.move.databinding.FragmentExercisesBinding
 import com.example.move.ui.ExercisesViewModel
 import com.example.move.ui.MainActivity
+import com.example.move.ui.WorkoutViewModel
 import com.example.move.util.Resource
 
 
@@ -48,10 +50,18 @@ class ExerciseListFragment : Fragment() {
         setupRecyclerView()
 
         exercisesAdapter.setOnItemClickListener {
-            findNavController().navigate(
-                ExerciseListFragmentDirections
-                    .actionExerciseListFragmentToExerciseInfoFragment(it)
-            )
+            if (findNavController().previousBackStackEntry?.destination?.id == R.id.workoutFragment) {
+                findNavController().navigate(
+                    ExerciseListFragmentDirections
+                        .actionExerciseListFragmentToWorkoutFragment(it)
+                )
+            } else {
+                findNavController().navigate(
+                    ExerciseListFragmentDirections
+                        .actionExerciseListFragmentToExerciseInfoFragment(it)
+                )
+            }
+
         }
 
         viewModel.exercises.observe(viewLifecycleOwner) { response ->
