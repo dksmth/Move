@@ -35,16 +35,14 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this, viewModelProvideFactory)[ExercisesViewModel::class.java]
 
-//        val exercisesRepository = ExercisesRepository(db = ExerciseDatabase.invoke(this))
-//
-//        lifecycleScope.launch {
-//            val response = exercisesRepository.getExercises()
-//
-//            response.body()?.forEach {
-//                exercisesRepository.upsert(it)
-//            }
-//        }
+        val exercisesRepository = ExercisesRepository(db = ExerciseDatabase.invoke(this))
 
+        lifecycleScope.launch {
+            val response = exercisesRepository.getExercises()
 
+            response.body()?.forEach {
+                exercisesRepository.upsert(it)
+            }
+        }
     }
 }

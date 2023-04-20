@@ -9,53 +9,15 @@ import com.example.move.util.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class ExercisesViewModel(val exercisesRepository: ExercisesRepository): ViewModel() {
+class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) : ViewModel() {
 
     val exercises: MutableLiveData<Resource<List<ExerciseItem>>> = MutableLiveData()
-    val exercisesPage = 1
-
-    var workout: MutableLiveData<List<Block>> = MutableLiveData(listOf())
-
-    var newWorkout: MutableLiveData<Workout> = MutableLiveData(Workout())
-
-
-    fun addExercise(block: Block) {
-        if (workout.value?.isNotEmpty() == true) {
-            workout.value = workout.value?.plus(block)
-        } else {
-            workout.value = listOf(block)
-        }
-    }
-
-    fun addSet(block: Block) {
-
-        val newBlock = block.copy(
-            listOfSets = (block.listOfSets + OneSet(0, 0)) as MutableList<OneSet>
-        )
-
-//        workout.value = workout.value?.filter { it == block }.forEach {
-//            it = newBlock
-//        }
-
-//        newWorkout.value = newWorkout.value.copy(
-//            blocks = newWorkout.value.blocks.forEach {
-//                if (it == block) {
-//                    it = newBlock
-//                }
-//            }
-//        )
-//
-        workout.value = workout.value?.minus(block)
-
-        workout.value = workout.value?.plus(newBlock)
-    }
 
     init {
         getExercises()
     }
 
-
-    fun getExercises() {
+    private fun getExercises() {
         viewModelScope.launch {
             exercises.postValue(Resource.Loading())
             val response = exercisesRepository.getExercises()
@@ -63,6 +25,15 @@ class ExercisesViewModel(val exercisesRepository: ExercisesRepository): ViewMode
             val resource = handleResponse(response)
 
             exercises.postValue(resource)
+        }
+    }
+
+    private fun getExercisesFromDb() {
+        viewModelScope.launch {
+            exercises.postValue(Resource.Loading())
+            val response = exercisesRepository.getSavedExercises()
+
+            exercises.value = response.value?.let { Resource.Success(it) }!!
         }
     }
 
@@ -74,6 +45,5 @@ class ExercisesViewModel(val exercisesRepository: ExercisesRepository): ViewMode
         }
         return Resource.Error(response.message())
     }
-
 
 }

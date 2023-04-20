@@ -1,26 +1,31 @@
 package com.example.move.ui
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.move.models.Block
-import com.example.move.models.Exercise
-import com.example.move.models.ExerciseItem
-import com.example.move.models.Workout
+import com.example.move.models.OneSet
 
-class WorkoutViewModel: ViewModel() {
+class WorkoutViewModel : ViewModel() {
 
-    var workout: MutableLiveData<Workout> = MutableLiveData(Workout())
+    var workout: MutableLiveData<List<Block>> = MutableLiveData(listOf())
 
-//    fun addExercise(exercise: ExerciseItem) {
-//        if (workout.value != null) {
-//            workout.value!!.exercises?.plusAssign(exercise)
-//        } else {
-//            workout.value = Workout(arrayListOf(exercise))
-//        }
-//    }
-//
-//    fun addSet(block: Block) {
-//        workout.value?.exercises
-//    }
+    fun addExercise(block: Block) {
+        if (workout.value?.isNotEmpty() == true) {
+            workout.value = workout.value?.plus(block)
+        } else {
+            workout.value = listOf(block)
+        }
+    }
+
+    fun addSet(block: Block) {
+
+        val newBlock = block.copy(
+            listOfSets = (block.listOfSets + OneSet(0, 0)) as MutableList<OneSet>
+        )
+
+        workout.value = workout.value?.minus(block)
+
+        workout.value = workout.value?.plus(newBlock)
+    }
+
 }

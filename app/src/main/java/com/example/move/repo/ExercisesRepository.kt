@@ -13,4 +13,6 @@ class ExercisesRepository(
     suspend fun upsert(exercise: ExerciseItem) = db.getExerciseDao().upsert(exercise = exercise)
 
     fun getSavedExercises() = db.getExerciseDao().getAllExercises()
+
+    fun checkIfExists(): Boolean = db.getExerciseDao().isExists()
 }

@@ -2,7 +2,6 @@ package com.example.move.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.example.move.models.Exercise
 import com.example.move.models.ExerciseItem
 
 @Dao
@@ -14,8 +13,10 @@ interface ExerciseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(exercise: ExerciseItem): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(exerciseList: List<ExerciseItem>)
 
-//    @Delete
-//    suspend fun deleteArticle(exercise: ExerciseItem)
+    @Query("SELECT EXISTS(SELECT * FROM exercises)")
+    fun isExists(): Boolean
 
 }
