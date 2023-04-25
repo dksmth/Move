@@ -6,13 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.move.adapters.BlockAdapter
 import com.example.move.databinding.FragmentWorkoutBinding
 import com.example.move.models.Block
-import com.example.move.ui.WorkoutViewModel
+import com.example.move.ui.viewmodels.WorkoutViewModel
+import kotlinx.coroutines.launch
 
 class WorkoutFragment : Fragment() {
 
@@ -57,6 +59,17 @@ class WorkoutFragment : Fragment() {
 
         blockAdapter.setOnAddSetListener {
             viewModel.addSet(it)
+            blockAdapter.notifyItemChanged(blockAdapter.differ.currentList.indexOf(it))
+        }
+
+        blockAdapter.setOnDeleteListener {
+            viewModel.deleteExercise(it)
+        }
+
+        binding.btSaveWorkout.setOnClickListener {
+            lifecycleScope.launch {
+                viewModel.insertWorkout()
+            }
         }
     }
 

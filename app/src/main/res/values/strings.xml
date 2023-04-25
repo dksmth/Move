@@ -19,4 +19,7 @@
     <string name="btAdd">Add exercise</string>
     <string name="tvTitleOfExercise">Exercise</string>
     <string name="numberOfSets">1</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="save_workout">Save Workout</string>
+    <string name="btAddSet">ADD SET</string>
 </resources>

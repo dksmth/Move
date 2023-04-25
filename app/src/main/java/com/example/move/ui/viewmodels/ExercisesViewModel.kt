@@ -1,4 +1,4 @@
-package com.example.move.ui
+package com.example.move.ui.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

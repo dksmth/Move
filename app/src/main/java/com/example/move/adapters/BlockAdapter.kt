@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.move.R
 import com.example.move.models.Block
-import com.example.move.models.OneSet
 
 class BlockAdapter(private val block: List<Block>): RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
 
@@ -19,6 +18,7 @@ class BlockAdapter(private val block: List<Block>): RecyclerView.Adapter<BlockAd
         val tvName: TextView = itemView.findViewById(R.id.tvName)
         val rvExercise: RecyclerView = itemView.findViewById(R.id.rvExercise)
         val btAddSet: Button = itemView.findViewById(R.id.btAddSet)
+        val btDelete: Button = itemView.findViewById(R.id.btDeleteButton)
     }
 
     private val differCallback = object : DiffUtil.ItemCallback<Block>() {
@@ -55,8 +55,8 @@ class BlockAdapter(private val block: List<Block>): RecyclerView.Adapter<BlockAd
         }
 
         holder.apply {
-            val setAdapter = block.listOfSets?.let { SetAdapter(it.toList()) }
-            setAdapter?.differ?.submitList(block.listOfSets)
+            val setAdapter = SetAdapter(block.listOfSets.toList())
+            setAdapter.differ.submitList(block.listOfSets)
             rvExercise.adapter = setAdapter
 
 //            btAddSet.setOnClickListener {
@@ -69,12 +69,22 @@ class BlockAdapter(private val block: List<Block>): RecyclerView.Adapter<BlockAd
             addSetClickListener?.let { it(block) }
         }
 
+        holder.btDelete.setOnClickListener {
+            addDeleteBlockListener?.let { it(block) }
+        }
+
     }
 
     private var addSetClickListener: ((Block) -> Unit)? = null
 
     fun setOnAddSetListener(listener: (Block) -> Unit) {
         addSetClickListener = listener
+    }
+
+    private var addDeleteBlockListener: ((Block) -> Unit)? = null
+
+    fun setOnDeleteListener(listener: (Block) -> Unit) {
+        addDeleteBlockListener = listener
     }
 
 }

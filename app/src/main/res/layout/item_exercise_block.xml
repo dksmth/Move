@@ -33,10 +33,18 @@
         android:id="@+id/btAddSet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="@string/btAddSet"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvExercise" />
+
+    <Button
+        android:id="@+id/btDeleteButton"
+        android:layout_width="40dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/rvExercise"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

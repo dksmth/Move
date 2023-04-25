@@ -12,7 +12,7 @@ import com.example.move.R
 import com.example.move.adapters.ExercisesAdapter
 import com.example.move.databinding.FragmentExercisesBinding
 import com.example.move.models.ExerciseItem
-import com.example.move.ui.ExercisesViewModel
+import com.example.move.ui.viewmodels.ExercisesViewModel
 import com.example.move.ui.MainActivity
 import com.example.move.util.Resource
 

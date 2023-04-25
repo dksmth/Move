@@ -1,6 +1,5 @@
 package com.example.move.adapters
 
-import android.util.Range
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.move.R
 import com.example.move.models.OneSet
-import kotlin.random.Random
-import kotlin.random.nextInt
 
 class SetAdapter (private val oneSet: List<OneSet>): RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
 
@@ -54,8 +51,9 @@ class SetAdapter (private val oneSet: List<OneSet>): RecyclerView.Adapter<SetAda
         holder.apply {
             weight.setText(set.weight.toString())
             reps.setText(set.reps.toString())
-            setNumber.text = Random.nextInt(IntRange(0,100)).toString()
+            setNumber.text = position.toString()
         }
+
 
     }
 

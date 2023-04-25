@@ -11,6 +11,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.move.R
 import com.example.move.db.ExerciseDatabase
 import com.example.move.repo.ExercisesRepository
+import com.example.move.ui.viewmodels.ExercisesViewModel
+import com.example.move.ui.viewmodels.ExercisesViewModelProvideFactory
 import kotlinx.coroutines.launch
 
 

@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.move.databinding.FragmentExerciseInfoBinding
-import com.example.move.ui.ExercisesViewModel
+import com.example.move.ui.viewmodels.ExercisesViewModel
 import com.example.move.ui.MainActivity
 
 

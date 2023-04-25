@@ -6,6 +6,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Block (
         val exercise: ExerciseItem? = null,
-        val listOfSets: MutableList<OneSet> = mutableListOf(),
+        var listOfSets: List<OneSet> = listOf(),
         val comment: String? = null
         ): Parcelable

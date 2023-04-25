@@ -4,12 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.move.models.ExerciseItem
+import com.example.move.models.Workout
 
 @Database(
-    entities = [ExerciseItem::class],
-    version = 1
+    entities = [ExerciseItem::class, Workout::class],
+    version = 2
 )
+@TypeConverters(Converters::class)
 abstract class ExerciseDatabase: RoomDatabase()  {
 
     abstract fun getExerciseDao(): ExerciseDao
@@ -28,6 +31,8 @@ abstract class ExerciseDatabase: RoomDatabase()  {
                 context.applicationContext,
                 ExerciseDatabase::class.java,
                 "exercise_db.db"
-            ).build()
+            )
+                .fallbackToDestructiveMigration()
+                .build()
     }
 }
