@@ -6,23 +6,29 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.move.R
 import com.example.move.adapters.ExercisesAdapter
 import com.example.move.databinding.FragmentExercisesBinding
+import com.example.move.models.Block
 import com.example.move.models.ExerciseItem
 import com.example.move.ui.viewmodels.ExercisesViewModel
 import com.example.move.ui.MainActivity
+import com.example.move.ui.viewmodels.WorkoutViewModel
 import com.example.move.util.Resource
 
 
-class ExerciseListFragment : Fragment() {
+class PickExerciseFragment : Fragment() {
 
     private var _binding: FragmentExercisesBinding? = null
     private val binding get() = _binding!!
 
     lateinit var viewModel: ExercisesViewModel
+
+    private val workoutViewModel: WorkoutViewModel by lazy {
+        ViewModelProvider(requireActivity())[WorkoutViewModel::class.java]
+    }
 
     private lateinit var exercisesAdapter: ExercisesAdapter
 
@@ -44,7 +50,13 @@ class ExerciseListFragment : Fragment() {
         setupRecyclerView()
 
         exercisesAdapter.setOnItemClickListener {
-            navigate(it)
+            workoutViewModel.addExercise(block = Block(it))
+
+            findNavController().navigate(
+                with(PickExerciseFragmentDirections) {
+                    actionPickExerciseFragmentToWorkoutFragment()
+                }
+            )
         }
 
         viewModel.exercises.observe(viewLifecycleOwner) { response ->
@@ -72,11 +84,11 @@ class ExerciseListFragment : Fragment() {
         }
     }
 
-    private fun navigate(it: ExerciseItem) {
+    private fun navigate(exercise: ExerciseItem) {
 
         findNavController().navigate(
-            with(ExerciseListFragmentDirections) {
-                 actionExerciseListFragmentToExerciseInfoFragment(it)
+            with(PickExerciseFragmentDirections) {
+                actionPickExerciseFragmentToWorkoutFragment(exercise)
             }
         )
     }

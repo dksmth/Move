@@ -39,12 +39,10 @@ class ExerciseInfoFragment : Fragment() {
         val exercise = args.exercise
 
         binding.apply {
-            val gifUrlHttpsWrapped = "https" + exercise.gifUrl.removeRange(IntRange(0,3))
-
             Glide.with(requireActivity())
                 .asGif()
                 .centerCrop()
-                .load(gifUrlHttpsWrapped)
+                .load(exercise.gifUrl)
                 .into(ivExerciseGif)
 
             tvBodypartEdit.text = exercise.bodyPart

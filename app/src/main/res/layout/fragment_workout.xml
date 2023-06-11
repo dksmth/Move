@@ -23,24 +23,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8" />
+        app:layout_constraintGuide_percent="0.9" />
 
     <Button
         android:id="@+id/btAddExercise"
-        android:layout_width="wrap_content"
+        android:layout_width="204dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
         android:text="@string/btAdd"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btSaveWorkout"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btSaveWorkout"
-        android:layout_width="wrap_content"
+        android:layout_width="204dp"
         android:layout_height="wrap_content"
         android:text="@string/save_workout"
-        app:layout_constraintBottom_toTopOf="@+id/btAddExercise"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvBlocks" />
+        app:layout_constraintStart_toEndOf="@+id/btAddExercise" />
 </androidx.constraintlayout.widget.ConstraintLayout>

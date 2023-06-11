@@ -39,11 +39,22 @@ class MainActivity : AppCompatActivity() {
 
         val exercisesRepository = ExercisesRepository(db = ExerciseDatabase.invoke(this))
 
-        lifecycleScope.launch {
-            val response = exercisesRepository.getExercises()
+        populateDatabase(repository, exercisesRepository)
+    }
 
-            response.body()?.forEach {
-                exercisesRepository.upsert(it)
+    private fun populateDatabase(
+        repository: ExercisesRepository,
+        exercisesRepository: ExercisesRepository,
+    ) {
+        lifecycleScope.launch {
+
+            if (!repository.checkIfExists()) {
+                val response = exercisesRepository.getExercises()
+
+
+                response.body()?.let {
+                    exercisesRepository.upsertAll(it)
+                }
             }
         }
     }

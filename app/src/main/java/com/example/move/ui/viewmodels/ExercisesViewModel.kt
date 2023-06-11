@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.move.models.*
 import com.example.move.repo.ExercisesRepository
 import com.example.move.util.Resource
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) : ViewModel() {
@@ -14,7 +16,13 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) :
     val exercises: MutableLiveData<Resource<List<ExerciseItem>>> = MutableLiveData()
 
     init {
-        getExercises()
+        viewModelScope.launch {
+            if (exercisesRepository.checkIfExists()) {
+                getExercisesFromDb()
+            } else {
+                getExercises()
+            }
+        }
     }
 
     private fun getExercises() {
@@ -30,10 +38,14 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) :
 
     private fun getExercisesFromDb() {
         viewModelScope.launch {
-            exercises.postValue(Resource.Loading())
-            val response = exercisesRepository.getSavedExercises()
+            withContext(Dispatchers.IO) {
+                exercises.postValue(Resource.Loading())
+                val response = exercisesRepository.getSavedExercises()
 
-            exercises.value = response.value?.let { Resource.Success(it) }!!
+                response.let {
+                    exercises.postValue(Resource.Success(it))
+                }
+            }
         }
     }
 

@@ -1,20 +1,17 @@
 package com.example.move.adapters
 
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.move.R
 import com.example.move.models.OneSet
 
-class SetAdapter (private val oneSet: List<OneSet>): RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
+class SetsAdapter (private val oneSet: List<OneSet>): RecyclerView.Adapter<SetsAdapter.SetViewHolder>() {
 
     inner class SetViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val setNumber: TextView = itemView.findViewById(R.id.tvNumberOfSets)
@@ -34,7 +31,7 @@ class SetAdapter (private val oneSet: List<OneSet>): RecyclerView.Adapter<SetAda
 
     val differ = AsyncListDiffer(this, differCallback)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SetViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SetsAdapter.SetViewHolder {
         return SetViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.item_sets,
@@ -48,7 +45,7 @@ class SetAdapter (private val oneSet: List<OneSet>): RecyclerView.Adapter<SetAda
         return differ.currentList.size
     }
 
-    override fun onBindViewHolder(holder: SetViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SetsAdapter.SetViewHolder, position: Int) {
         val set = differ.currentList[position]
 
         holder.apply {

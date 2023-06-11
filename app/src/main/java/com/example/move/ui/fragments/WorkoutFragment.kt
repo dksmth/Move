@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.move.R
 import com.example.move.adapters.BlockAdapter
 import com.example.move.databinding.FragmentWorkoutBinding
 import com.example.move.models.Block
@@ -43,27 +44,23 @@ class WorkoutFragment : Fragment() {
 
         binding.btAddExercise.setOnClickListener {
             findNavController().navigate(
-                WorkoutFragmentDirections.actionWorkoutFragmentToExerciseListFragment()
+                WorkoutFragmentDirections.actionWorkoutFragmentToPickExerciseFragment()
             )
         }
 
-        if (args.chosenExercise != null) {
-            viewModel.addExercise(Block(args.chosenExercise!!))
-        }
-
-        setupBlockAdapter(block = Block())
+        setupBlockAdapter()
 
         viewModel.workout.observe(viewLifecycleOwner) { workout ->
             blockAdapter.differ.submitList(workout)
         }
 
-        blockAdapter.setOnAddSetListener {
-            viewModel.addSet(it)
-            blockAdapter.notifyItemChanged(blockAdapter.differ.currentList.indexOf(it))
-        }
 
         blockAdapter.setOnDeleteListener {
             viewModel.deleteExercise(it)
+        }
+
+        blockAdapter.setNavigateToExerciseListener {
+            navigateToSetInfoFragment(it)
         }
 
         binding.btSaveWorkout.setOnClickListener {
@@ -73,8 +70,15 @@ class WorkoutFragment : Fragment() {
         }
     }
 
-    private fun setupBlockAdapter(block: Block) {
-        blockAdapter = BlockAdapter(listOf(block))
+
+    private fun navigateToSetInfoFragment(exercise: Block) {
+        findNavController().navigate(
+            WorkoutFragmentDirections.actionWorkoutFragmentToSetInfoFragment3(exercise)
+        )
+    }
+
+    private fun setupBlockAdapter() {
+        blockAdapter = BlockAdapter()
         binding.rvBlocks.apply {
             adapter = blockAdapter
             layoutManager = LinearLayoutManager(activity)

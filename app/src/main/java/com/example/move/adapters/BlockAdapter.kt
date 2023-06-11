@@ -11,13 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.move.R
 import com.example.move.models.Block
 
-class BlockAdapter(private val block: List<Block>): RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
+class BlockAdapter(): RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
 
 
     inner class BlockViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val tvName: TextView = itemView.findViewById(R.id.tvName)
         val rvExercise: RecyclerView = itemView.findViewById(R.id.rvExercise)
-        val btAddSet: Button = itemView.findViewById(R.id.btAddSet)
         val btDelete: Button = itemView.findViewById(R.id.btDeleteButton)
     }
 
@@ -32,6 +31,7 @@ class BlockAdapter(private val block: List<Block>): RecyclerView.Adapter<BlockAd
     }
 
     val differ = AsyncListDiffer(this, differCallback)
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockAdapter.BlockViewHolder {
         return BlockViewHolder(
@@ -58,27 +58,22 @@ class BlockAdapter(private val block: List<Block>): RecyclerView.Adapter<BlockAd
             val setAdapter = SetAdapter(block.listOfSets.toList())
             setAdapter.differ.submitList(block.listOfSets)
             rvExercise.adapter = setAdapter
-
-//            btAddSet.setOnClickListener {
-//                block.listOfSets?.plusAssign(OneSet(0, 0))
-//                setAdapter?.differ?.submitList(block.listOfSets)
-//            }
         }
 
-        holder.btAddSet.setOnClickListener {
-            addSetClickListener?.let { it(block) }
-        }
 
         holder.btDelete.setOnClickListener {
             addDeleteBlockListener?.let { it(block) }
         }
 
+        holder.itemView.setOnClickListener {
+            addNavigateToExerciseListener?.let { it(block) }
+        }
     }
 
-    private var addSetClickListener: ((Block) -> Unit)? = null
+    private var addNavigateToExerciseListener: ((Block) -> Unit)? = null
 
-    fun setOnAddSetListener(listener: (Block) -> Unit) {
-        addSetClickListener = listener
+    fun setNavigateToExerciseListener(listener: (Block) -> Unit) {
+        addNavigateToExerciseListener = listener
     }
 
     private var addDeleteBlockListener: ((Block) -> Unit)? = null

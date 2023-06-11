@@ -9,7 +9,7 @@ import com.example.move.models.Workout
 interface ExerciseDao {
 
     @Query("SELECT * FROM exercises")
-    fun getAllExercises(): LiveData<List<ExerciseItem>>
+    suspend fun getAllExercises(): List<ExerciseItem>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(exercise: ExerciseItem): Long
@@ -20,7 +20,10 @@ interface ExerciseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(exerciseList: List<ExerciseItem>)
 
+    @Query("DELETE FROM exercises")
+    suspend fun deleteAll()
+
     @Query("SELECT EXISTS(SELECT * FROM exercises)")
-    fun isExists(): Boolean
+    suspend fun isExists(): Boolean
 
 }
