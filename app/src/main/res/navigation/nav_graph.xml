@@ -34,25 +34,8 @@
             app:nullable="true"
             android:defaultValue="@null" />
         <action
-            android:id="@+id/action_workoutFragment_to_setInfoFragment3"
-            app:destination="@id/setInfoFragment3" />
-        <action
             android:id="@+id/action_workoutFragment_to_pickExerciseFragment"
             app:destination="@id/pickExerciseFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/setInfoFragment3"
-        android:name="com.example.move.ui.fragments.SetInfoFragment"
-        android:label="fragment_set_info"
-        tools:layout="@layout/fragment_set_info" >
-        <action
-            android:id="@+id/action_setInfoFragment3_to_workoutFragment"
-            app:destination="@id/workoutFragment"
-            app:popUpTo="@id/workoutFragment"
-            app:popUpToInclusive="false" />
-        <argument
-            android:name="block"
-            app:argType="com.example.move.models.Block" />
     </fragment>
     <fragment
         android:id="@+id/pickExerciseFragment"

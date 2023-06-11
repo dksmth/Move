@@ -8,12 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.move.R
 import com.example.move.adapters.BlockAdapter
 import com.example.move.databinding.FragmentWorkoutBinding
-import com.example.move.models.Block
 import com.example.move.ui.viewmodels.WorkoutViewModel
 import kotlinx.coroutines.launch
 
@@ -28,8 +25,6 @@ class WorkoutFragment : Fragment() {
     private var _binding: FragmentWorkoutBinding? = null
     private val binding get() = _binding!!
 
-    private val args: WorkoutFragmentArgs by navArgs()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,25 +37,23 @@ class WorkoutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btAddExercise.setOnClickListener {
-            findNavController().navigate(
-                WorkoutFragmentDirections.actionWorkoutFragmentToPickExerciseFragment()
-            )
-        }
-
         setupBlockAdapter()
 
         viewModel.workout.observe(viewLifecycleOwner) { workout ->
             blockAdapter.differ.submitList(workout)
         }
 
+        blockAdapter.setAddSetListener { block ->
+            viewModel.addSet(block)
+            blockAdapter.notifyItemChanged(blockAdapter.differ.currentList.indexOf(block))
+        }
 
         blockAdapter.setOnDeleteListener {
             viewModel.deleteExercise(it)
         }
 
-        blockAdapter.setNavigateToExerciseListener {
-            navigateToSetInfoFragment(it)
+        binding.btAddExercise.setOnClickListener {
+            navigateToPickExerciseFragment()
         }
 
         binding.btSaveWorkout.setOnClickListener {
@@ -70,10 +63,9 @@ class WorkoutFragment : Fragment() {
         }
     }
 
-
-    private fun navigateToSetInfoFragment(exercise: Block) {
+    private fun navigateToPickExerciseFragment() {
         findNavController().navigate(
-            WorkoutFragmentDirections.actionWorkoutFragmentToSetInfoFragment3(exercise)
+            WorkoutFragmentDirections.actionWorkoutFragmentToPickExerciseFragment()
         )
     }
 

@@ -15,9 +15,7 @@ import kotlinx.coroutines.launch
 class WorkoutViewModel(application: Application) : AndroidViewModel(application) {
 
     var workout: MutableLiveData<List<Block>> = MutableLiveData(listOf())
-
-    var sets: MutableLiveData<List<OneSet>> = MutableLiveData(listOf())
-
+    
     private var dao: ExerciseDao = ExerciseDatabase(application).getExerciseDao()
 
     fun addExercise(block: Block) {
@@ -29,27 +27,18 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun addSet(block: Block) {
-//        if (sets.value?.isNotEmpty() == true) {
-//            sets.value = sets.value?.plus(set)
-//        } else {
-//            sets.value = listOf(set)
-//        }
+        val chosenBlock = workout.value?.find { it == block }
 
-        workout.value?.find { it == block }?.listOfSets = workout.value?.find { it == block }?.listOfSets?.plus(
+        chosenBlock!!.listOfSets = chosenBlock.listOfSets + OneSet(0,0)
+    }
+
+    /*
+    workout.value?.find { it == block }?.listOfSets = workout.value?.find { it == block }?.listOfSets?.plus(
             OneSet(0,0)
         )!!
 
-        sets.value = workout.value?.find { it == block }?.listOfSets
-    }
-
-//    fun addSet(block: Block) {
-//        val index = workout.value!!.indexOf(block)
-//
-//        workout.value!![index].listOfSets = block.listOfSets + OneSet(0, 0)
-//
-//        workout.postValue(workout.value)
-//
-//    }
+    sets.value = workout.value?.find { it == block }?.listOfSets
+     */
 
     fun deleteExercise(block: Block) {
         workout.value = workout.value?.minus(block)

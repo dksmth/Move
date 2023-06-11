@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.move.R
 import com.example.move.models.Block
 
-class BlockAdapter(): RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
+class BlockAdapter() : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
 
-
-    inner class BlockViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class BlockViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvName: TextView = itemView.findViewById(R.id.tvName)
         val rvExercise: RecyclerView = itemView.findViewById(R.id.rvExercise)
         val btDelete: Button = itemView.findViewById(R.id.btDeleteButton)
+        val btAddSet: Button = itemView.findViewById(R.id.btAddSet)
     }
 
     private val differCallback = object : DiffUtil.ItemCallback<Block>() {
@@ -32,8 +32,10 @@ class BlockAdapter(): RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
 
     val differ = AsyncListDiffer(this, differCallback)
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BlockAdapter.BlockViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): BlockAdapter.BlockViewHolder {
         return BlockViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.item_exercise_block,
@@ -50,30 +52,22 @@ class BlockAdapter(): RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
     override fun onBindViewHolder(holder: BlockAdapter.BlockViewHolder, position: Int) {
         val block = differ.currentList[position]
 
-        holder.apply {
-            tvName.text = block.exercise?.name
+        val setAdapter = SetAdapter(block.listOfSets).apply {
+            differ.submitList(block.listOfSets)
         }
 
         holder.apply {
-            val setAdapter = SetAdapter(block.listOfSets.toList())
-            setAdapter.differ.submitList(block.listOfSets)
             rvExercise.adapter = setAdapter
+            tvName.text = block.exercise?.name
+
+            btDelete.setOnClickListener {
+                addDeleteBlockListener?.let { it(block) }
+            }
+
+            btAddSet.setOnClickListener {
+                addAddSetListener?.let { it(block) }
+            }
         }
-
-
-        holder.btDelete.setOnClickListener {
-            addDeleteBlockListener?.let { it(block) }
-        }
-
-        holder.itemView.setOnClickListener {
-            addNavigateToExerciseListener?.let { it(block) }
-        }
-    }
-
-    private var addNavigateToExerciseListener: ((Block) -> Unit)? = null
-
-    fun setNavigateToExerciseListener(listener: (Block) -> Unit) {
-        addNavigateToExerciseListener = listener
     }
 
     private var addDeleteBlockListener: ((Block) -> Unit)? = null
@@ -82,4 +76,9 @@ class BlockAdapter(): RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
         addDeleteBlockListener = listener
     }
 
+    private var addAddSetListener: ((Block) -> Unit)? = null
+
+    fun setAddSetListener(listener: (Block) -> Unit) {
+        addAddSetListener = listener
+    }
 }
