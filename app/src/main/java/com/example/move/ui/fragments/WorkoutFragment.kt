@@ -57,15 +57,30 @@ class WorkoutFragment : Fragment() {
         }
 
         binding.btSaveWorkout.setOnClickListener {
+            endWorkout()
+        }
+    }
+
+    private fun endWorkout() {
+        if (viewModel.canBeFinished()) {
             lifecycleScope.launch {
                 viewModel.insertWorkout()
             }
+
+            viewModel.endWorkout()
+            navigateToEndScreen()
         }
     }
 
     private fun navigateToPickExerciseFragment() {
         findNavController().navigate(
             WorkoutFragmentDirections.actionWorkoutFragmentToPickExerciseFragment()
+        )
+    }
+
+    private fun navigateToEndScreen() {
+        findNavController().navigate(
+            WorkoutFragmentDirections.actionWorkoutFragmentToWorkoutFinishedFragment()
         )
     }
 

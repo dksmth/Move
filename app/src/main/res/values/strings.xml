@@ -22,4 +22,6 @@
     <string name="title_activity_main2">MainActivity2</string>
     <string name="save_workout">Save Workout</string>
     <string name="btAddSet">ADD SET</string>
+    <string name="tvWorkoutFinished">You have finished your workout!</string>
+    <string name="btGoBack">Go back to the exercises</string>
 </resources>

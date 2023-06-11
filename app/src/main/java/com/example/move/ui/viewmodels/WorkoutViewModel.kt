@@ -1,21 +1,18 @@
 package com.example.move.ui.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.move.db.ExerciseDao
 import com.example.move.db.ExerciseDatabase
 import com.example.move.models.Block
 import com.example.move.models.OneSet
 import com.example.move.models.Workout
-import kotlinx.coroutines.launch
 
 class WorkoutViewModel(application: Application) : AndroidViewModel(application) {
 
     var workout: MutableLiveData<List<Block>> = MutableLiveData(listOf())
-    
+
     private var dao: ExerciseDao = ExerciseDatabase(application).getExerciseDao()
 
     fun addExercise(block: Block) {
@@ -29,7 +26,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     fun addSet(block: Block) {
         val chosenBlock = workout.value?.find { it == block }
 
-        chosenBlock!!.listOfSets = chosenBlock.listOfSets + OneSet(0,0)
+        chosenBlock!!.listOfSets = chosenBlock.listOfSets + OneSet(0, 0)
     }
 
     /*
@@ -44,11 +41,16 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         workout.value = workout.value?.minus(block)
     }
 
+    fun endWorkout() {
+        workout.value = listOf()
+    }
+
+    fun canBeFinished(): Boolean {
+        return workout.value?.isNotEmpty() ?: false
+    }
+
     suspend fun insertWorkout() {
-        viewModelScope.launch {
-            Log.d("Smth", workout.value.toString())
-            dao.upsertWorkout(workout = Workout(blocks = workout.value))
-        }
+        dao.upsertWorkout(workout = Workout(blocks = workout.value))
     }
 
 
