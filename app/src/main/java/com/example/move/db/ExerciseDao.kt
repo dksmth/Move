@@ -25,4 +25,10 @@ interface ExerciseDao {
     @Query("SELECT EXISTS(SELECT * FROM exercises)")
     suspend fun exists(): Boolean
 
+    @Query("SELECT * FROM workouts")
+    suspend fun getAllWorkouts(): List<Workout>
+
+    @Query("SELECT * FROM workouts ORDER BY dbID DESC LIMIT 1")
+    suspend fun getLastWorkout(): Workout
+
 }

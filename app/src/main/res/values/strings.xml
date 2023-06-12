@@ -24,4 +24,6 @@
     <string name="btAddSet">ADD SET</string>
     <string name="tvWorkoutFinished">You have finished your workout!</string>
     <string name="btGoBack">Go back to the exercises</string>
+    <string name="edittextWeightHint">Weight</string>
+    <string name="edittextRepsHint">Repetitions</string>
 </resources>

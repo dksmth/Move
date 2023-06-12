@@ -1,6 +1,5 @@
 package com.example.move.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,7 +52,7 @@ class BlockAdapter() : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
     override fun onBindViewHolder(holder: BlockAdapter.BlockViewHolder, position: Int) {
         val block = differ.currentList[position]
 
-        val setAdapter = SetAdapter(block.listOfSets).apply {
+        val setAdapter = SetAdapter().apply {
             differ.submitList(block.listOfSets)
         }
 
@@ -69,12 +68,8 @@ class BlockAdapter() : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
                 addAddSetListener?.let { it(block) }
             }
 
-            setAdapter.smthSet { str ->
-                val blockPos = "$adapterPosition $str"
-
-                Log.d("BlockAdapter", blockPos)
-
-                smthListener?.let { it(block, str) }
+            setAdapter.setWeightAndRepsListener { str ->
+                setAdapterListener?.let { it(block, str) }
             }
         }
     }
@@ -91,9 +86,9 @@ class BlockAdapter() : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
         addAddSetListener = listener
     }
 
-    private var smthListener: ((Block, String) -> Unit)? = null
+    private var setAdapterListener: ((Block, List<String>) -> Unit)? = null
 
-    fun addSmthListener(listener: (Block,String) -> Unit) {
-        smthListener = listener
+    fun addSetAdapterListener(listener: (Block, List<String>) -> Unit) {
+        setAdapterListener = listener
     }
 }

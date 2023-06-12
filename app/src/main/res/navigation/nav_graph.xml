@@ -60,5 +60,8 @@
             android:id="@+id/action_workoutFinishedFragment_to_exerciseListFragment"
             app:destination="@id/exerciseListFragment"
             app:launchSingleTop="true" />
+        <argument
+            android:name="lastWorkoutInfo"
+            app:argType="string" />
     </fragment>
 </navigation>

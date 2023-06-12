@@ -40,37 +40,36 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
 
     // Нихрена не заработало
 
-    fun changeSet(block: Block, str: String) {
+    fun changeSet(block: Block, strings: List<String>) {
 
-        Log.d("changeSet", block.toString() + str)
+        val (value, position, type) = strings
 
-        val (value, position) = parseString(str)
+        var returnedNumber= 0.0
+
+        if (value.isNotBlank()) {
+            returnedNumber = value.toDouble()
+            if (returnedNumber > 1000) {
+                returnedNumber = 1000.0
+            }
+        }
 
         val chosenBlock = workout.value?.find { it == block }
 
-        Log.d("changeSet", chosenBlock.toString())
+        if (type == "weight") {
+            chosenBlock!!.listOfSets[position.toInt()].weight = returnedNumber.toInt()
+        } else {
+            chosenBlock!!.listOfSets[position.toInt()].reps = returnedNumber.toInt()
+        }
 
-        chosenBlock!!.listOfSets[position] = OneSet(value, value)
 
         // workout.value?.last()?.listOfSets!![position] = OneSet(value, value)
 
     }
 
-    fun parseString(str: String): Pair<Int, Int> {
-
-        // Нужно лучше запарсить
-
-        val smth = str.split(' ')
-
-        Log.d("WorkoutVM", smth.toString())
-
-        var first = str.substringBefore(' ')
-        if (first == "") {
-            first = "0"
-        }
-        val second = str.substringAfter(' ')
-        return Pair(first.toInt(), second.toInt())
+    fun getWorkoutInfo(): String {
+        return workout.value.toString()
     }
+
 
     suspend fun insertWorkout() {
         dao.upsertWorkout(workout = Workout(blocks = workout.value))

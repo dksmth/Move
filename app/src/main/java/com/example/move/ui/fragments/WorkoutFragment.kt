@@ -60,12 +60,8 @@ class WorkoutFragment : Fragment() {
             endWorkout()
         }
 
-        // Надо прологировать и посмотреть что где кидается
-        // Пока не работает
-
-        blockAdapter.addSmthListener { block, str ->
-
-            viewModel.changeSet(block, str)
+        blockAdapter.addSetAdapterListener { block, strings ->
+            viewModel.changeSet(block, strings)
         }
     }
 
@@ -75,8 +71,10 @@ class WorkoutFragment : Fragment() {
                 viewModel.insertWorkout()
             }
 
+            val workoutInfo = viewModel.getWorkoutInfo()
+
             viewModel.endWorkout()
-            navigateToEndScreen()
+            navigateToEndScreen(workoutInfo)
         }
     }
 
@@ -86,9 +84,9 @@ class WorkoutFragment : Fragment() {
         )
     }
 
-    private fun navigateToEndScreen() {
+    private fun navigateToEndScreen(workoutInfo: String) {
         findNavController().navigate(
-            WorkoutFragmentDirections.actionWorkoutFragmentToWorkoutFinishedFragment()
+            WorkoutFragmentDirections.actionWorkoutFragmentToWorkoutFinishedFragment(workoutInfo)
         )
     }
 

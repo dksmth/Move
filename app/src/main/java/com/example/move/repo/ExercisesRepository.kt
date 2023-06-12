@@ -22,4 +22,8 @@ class ExercisesRepository(
     suspend fun cacheExists(): Boolean = db.getExerciseDao().exists()
 
     suspend fun deleteAll() = db.getExerciseDao().deleteAll()
+
+    suspend fun getAllWorkouts() = db.getExerciseDao().getAllWorkouts()
+
+    suspend fun getLastWorkout() = db.getExerciseDao().getLastWorkout()
 }
