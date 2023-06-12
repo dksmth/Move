@@ -2,12 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <item android:id="@+id/exerciseListFragment"
-        android:title="@string/exercisesBottomNavigatonLabel"
-         />
+    <item
+        android:id="@+id/exerciseListFragment"
+        android:icon="@mipmap/smth"
+        android:title="@string/exercisesBottomNavigatonLabel" />
 
-    <item android:id="@+id/workoutFragment"
-        android:title="@string/workoutBottomNavigationLabel"
-         />
+    <item
+        android:id="@+id/workoutFragment"
+        android:icon="@mipmap/smth"
+        android:title="@string/workoutBottomNavigationLabel" />
 
 </menu>

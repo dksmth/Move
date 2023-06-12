@@ -1,7 +1,6 @@
 package com.example.move.ui.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.move.db.ExerciseDao
@@ -38,7 +37,6 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         return workout.value?.isNotEmpty() ?: false
     }
 
-    // Нихрена не заработало
 
     fun changeSet(block: Block, strings: List<String>) {
 
@@ -70,9 +68,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         return workout.value.toString()
     }
 
-
     suspend fun insertWorkout() {
         dao.upsertWorkout(workout = Workout(blocks = workout.value))
     }
-
 }
