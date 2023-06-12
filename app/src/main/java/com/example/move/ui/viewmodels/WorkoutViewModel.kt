@@ -1,6 +1,7 @@
 package com.example.move.ui.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.move.db.ExerciseDao
@@ -16,26 +17,14 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     private var dao: ExerciseDao = ExerciseDatabase(application).getExerciseDao()
 
     fun addExercise(block: Block) {
-        if (workout.value?.isNotEmpty() == true) {
-            workout.value = workout.value?.plus(block)
-        } else {
-            workout.value = listOf(block)
-        }
+        workout.value = workout.value?.plus(block)
     }
 
     fun addSet(block: Block) {
         val chosenBlock = workout.value?.find { it == block }
 
-        chosenBlock!!.listOfSets = chosenBlock.listOfSets + OneSet(0, 0)
+        chosenBlock!!.listOfSets = (chosenBlock.listOfSets + OneSet(0, 0)) as MutableList<OneSet>
     }
-
-    /*
-    workout.value?.find { it == block }?.listOfSets = workout.value?.find { it == block }?.listOfSets?.plus(
-            OneSet(0,0)
-        )!!
-
-    sets.value = workout.value?.find { it == block }?.listOfSets
-     */
 
     fun deleteExercise(block: Block) {
         workout.value = workout.value?.minus(block)
@@ -49,9 +38,42 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         return workout.value?.isNotEmpty() ?: false
     }
 
+    // Нихрена не заработало
+
+    fun changeSet(block: Block, str: String) {
+
+        Log.d("changeSet", block.toString() + str)
+
+        val (value, position) = parseString(str)
+
+        val chosenBlock = workout.value?.find { it == block }
+
+        Log.d("changeSet", chosenBlock.toString())
+
+        chosenBlock!!.listOfSets[position] = OneSet(value, value)
+
+        // workout.value?.last()?.listOfSets!![position] = OneSet(value, value)
+
+    }
+
+    fun parseString(str: String): Pair<Int, Int> {
+
+        // Нужно лучше запарсить
+
+        val smth = str.split(' ')
+
+        Log.d("WorkoutVM", smth.toString())
+
+        var first = str.substringBefore(' ')
+        if (first == "") {
+            first = "0"
+        }
+        val second = str.substringAfter(' ')
+        return Pair(first.toInt(), second.toInt())
+    }
+
     suspend fun insertWorkout() {
         dao.upsertWorkout(workout = Workout(blocks = workout.value))
     }
-
 
 }

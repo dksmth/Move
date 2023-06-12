@@ -1,5 +1,6 @@
 package com.example.move.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,6 +68,14 @@ class BlockAdapter() : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
             btAddSet.setOnClickListener {
                 addAddSetListener?.let { it(block) }
             }
+
+            setAdapter.smthSet { str ->
+                val blockPos = "$adapterPosition $str"
+
+                Log.d("BlockAdapter", blockPos)
+
+                smthListener?.let { it(block, str) }
+            }
         }
     }
 
@@ -80,5 +89,11 @@ class BlockAdapter() : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
 
     fun setAddSetListener(listener: (Block) -> Unit) {
         addAddSetListener = listener
+    }
+
+    private var smthListener: ((Block, String) -> Unit)? = null
+
+    fun addSmthListener(listener: (Block,String) -> Unit) {
+        smthListener = listener
     }
 }

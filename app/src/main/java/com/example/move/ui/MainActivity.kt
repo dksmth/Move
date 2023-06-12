@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     ) {
         lifecycleScope.launch {
 
-            if (!repository.checkIfExists()) {
+            if (!repository.cacheExists()) {
                 val response = exercisesRepository.getExercises()
 
                 response.body()?.let {

@@ -59,6 +59,14 @@ class WorkoutFragment : Fragment() {
         binding.btSaveWorkout.setOnClickListener {
             endWorkout()
         }
+
+        // Надо прологировать и посмотреть что где кидается
+        // Пока не работает
+
+        blockAdapter.addSmthListener { block, str ->
+
+            viewModel.changeSet(block, str)
+        }
     }
 
     private fun endWorkout() {

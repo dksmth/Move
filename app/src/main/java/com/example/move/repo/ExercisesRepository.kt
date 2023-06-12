@@ -19,7 +19,7 @@ class ExercisesRepository(
 
     suspend fun getSavedExercises() = db.getExerciseDao().getAllExercises()
 
-    suspend fun checkIfExists(): Boolean = db.getExerciseDao().isExists()
+    suspend fun cacheExists(): Boolean = db.getExerciseDao().exists()
 
     suspend fun deleteAll() = db.getExerciseDao().deleteAll()
 }

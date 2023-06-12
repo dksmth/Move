@@ -17,7 +17,7 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) :
 
     init {
         viewModelScope.launch {
-            if (exercisesRepository.checkIfExists()) {
+            if (exercisesRepository.cacheExists()) {
                 getExercisesFromDb()
             } else {
                 getExercises()
@@ -57,5 +57,4 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) :
         }
         return Resource.Error(response.message())
     }
-
 }

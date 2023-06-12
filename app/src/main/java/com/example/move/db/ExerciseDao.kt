@@ -1,6 +1,5 @@
 package com.example.move.db
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.move.models.ExerciseItem
 import com.example.move.models.Workout
@@ -24,6 +23,6 @@ interface ExerciseDao {
     suspend fun deleteAll()
 
     @Query("SELECT EXISTS(SELECT * FROM exercises)")
-    suspend fun isExists(): Boolean
+    suspend fun exists(): Boolean
 
 }
