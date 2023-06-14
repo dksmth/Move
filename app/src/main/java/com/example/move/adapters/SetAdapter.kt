@@ -5,6 +5,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -13,16 +14,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.move.R
 import com.example.move.models.OneSet
 
-class SetAdapter :
-    RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
+class SetAdapter : RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
+
+    var changeSetListener: ((List<String>) -> Unit)? = null
+
+    var deleteSetListener: ((Int) -> Unit)? = null
 
     inner class SetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val setNumber: TextView = itemView.findViewById(R.id.tvNumberOfSets)
         var weight: EditText = itemView.findViewById(R.id.etWeight)
         val reps: EditText = itemView.findViewById(R.id.etReps)
+        val btDelete: Button = itemView.findViewById(R.id.btDeleteSet)
 
-        init {
-            weight.addTextChangedListener(object : TextWatcher {
+        fun addListener(inputField: EditText, isReps: Boolean) {
+            inputField.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
 
@@ -30,32 +35,20 @@ class SetAdapter :
                 }
 
                 override fun afterTextChanged(p0: Editable?) {
+                    val typeName = if (isReps) "reps" else "weight"
+
                     val textPositionValue =
-                        listOf(p0.toString(), adapterPosition.toString(), "weight")
+                        listOf(
+                            p0.toString(),
+                            this@SetViewHolder.adapterPosition.toString(),
+                            typeName
+                        )
 
-                    addAddSetListener?.let { it(textPositionValue) }
-                }
-            })
-
-            reps.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                    val textPositionValue =
-                        listOf(p0.toString(), adapterPosition.toString(), "reps")
-
-                    addAddSetListener?.let { it(textPositionValue) }
+                    changeSetListener?.let { it(textPositionValue) }
                 }
             })
         }
     }
-
 
     private val differCallback = object : DiffUtil.ItemCallback<OneSet>() {
         override fun areItemsTheSame(oldItem: OneSet, newItem: OneSet): Boolean {
@@ -85,19 +78,22 @@ class SetAdapter :
 
     override fun onBindViewHolder(holder: SetViewHolder, position: Int) {
         val set = differ.currentList[position]
-        val positionForPublic = position + 1
+        val positionForPublic = holder.adapterPosition + 1
 
         holder.apply {
             weight.setText(set.weight.toString())
             reps.setText(set.reps.toString())
             setNumber.text = positionForPublic.toString()
+
+            btDelete.setOnClickListener {
+                deleteSetListener?.invoke(adapterPosition)
+            }
+
+            addListener(weight, isReps = false)
+            addListener(reps, isReps = true)
         }
 
     }
 
-    private var addAddSetListener: ((List<String>) -> Unit)? = null
 
-    fun setWeightAndRepsListener(listener: (List<String>) -> Unit) {
-        addAddSetListener = listener
-    }
 }

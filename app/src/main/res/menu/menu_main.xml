@@ -4,12 +4,10 @@
 
     <item
         android:id="@+id/exerciseListFragment"
-        android:icon="@mipmap/smth"
         android:title="@string/exercisesBottomNavigatonLabel" />
 
     <item
         android:id="@+id/workoutFragment"
-        android:icon="@mipmap/smth"
         android:title="@string/workoutBottomNavigationLabel" />
 
 </menu>

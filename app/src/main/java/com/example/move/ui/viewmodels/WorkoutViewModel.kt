@@ -18,6 +18,9 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     fun addExercise(block: Block) {
         workout.value = workout.value?.plus(block)
     }
+    fun deleteExercise(block: Block) {
+        workout.value = workout.value?.minus(block)
+    }
 
     fun addSet(block: Block) {
         val chosenBlock = workout.value?.find { it == block }
@@ -25,24 +28,11 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         chosenBlock!!.listOfSets = (chosenBlock.listOfSets + OneSet(0, 0)) as MutableList<OneSet>
     }
 
-    fun deleteExercise(block: Block) {
-        workout.value = workout.value?.minus(block)
-    }
-
-    fun endWorkout() {
-        workout.value = listOf()
-    }
-
-    fun canBeFinished(): Boolean {
-        return workout.value?.isNotEmpty() ?: false
-    }
-
-
     fun changeSet(block: Block, strings: List<String>) {
 
         val (value, position, type) = strings
 
-        var returnedNumber= 0.0
+        var returnedNumber = 0.0
 
         if (value.isNotBlank()) {
             returnedNumber = value.toDouble()
@@ -58,10 +48,20 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         } else {
             chosenBlock!!.listOfSets[position.toInt()].reps = returnedNumber.toInt()
         }
+    }
 
+    fun deleteSet(block: Block, position: Int) {
+        val chosenBlock = workout.value?.find { it == block }
 
-        // workout.value?.last()?.listOfSets!![position] = OneSet(value, value)
+        chosenBlock!!.listOfSets.removeAt(position)
+    }
 
+    fun endWorkout() {
+        workout.value = listOf()
+    }
+
+    fun canBeFinished(): Boolean {
+        return workout.value?.isNotEmpty() ?: false
     }
 
     fun getWorkoutInfo(): String {

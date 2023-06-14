@@ -43,12 +43,12 @@ class WorkoutFragment : Fragment() {
             blockAdapter.differ.submitList(workout)
         }
 
-        blockAdapter.setAddSetListener { block ->
+        blockAdapter.addSetListener = { block ->
             viewModel.addSet(block)
             blockAdapter.notifyItemChanged(blockAdapter.differ.currentList.indexOf(block))
         }
 
-        blockAdapter.setOnDeleteListener {
+        blockAdapter.deleteExerciseListener = {
             viewModel.deleteExercise(it)
         }
 
@@ -60,8 +60,13 @@ class WorkoutFragment : Fragment() {
             endWorkout()
         }
 
-        blockAdapter.addSetAdapterListener { block, strings ->
+        blockAdapter.changeSetListener  = { block, strings ->
             viewModel.changeSet(block, strings)
+        }
+
+        blockAdapter.deleteSetListener = { block, i ->
+            viewModel.deleteSet(block, i)
+            blockAdapter.notifyItemChanged(blockAdapter.differ.currentList.indexOf(block))
         }
     }
 

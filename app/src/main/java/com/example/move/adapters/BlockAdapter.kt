@@ -11,7 +11,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.move.R
 import com.example.move.models.Block
 
-class BlockAdapter() : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
+class BlockAdapter : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
+
+    var deleteExerciseListener: ((Block) -> Unit)? = null
+
+    var addSetListener: ((Block) -> Unit)? = null
+
+    var changeSetListener: ((Block, List<String>) -> Unit)? = null
+
+    var deleteSetListener: ((Block, Int) -> Unit)? = null
 
     inner class BlockViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvName: TextView = itemView.findViewById(R.id.tvName)
@@ -45,10 +53,6 @@ class BlockAdapter() : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
         )
     }
 
-    override fun getItemCount(): Int {
-        return differ.currentList.size
-    }
-
     override fun onBindViewHolder(holder: BlockAdapter.BlockViewHolder, position: Int) {
         val block = differ.currentList[position]
 
@@ -61,34 +65,24 @@ class BlockAdapter() : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
             tvName.text = block.exercise?.name
 
             btDelete.setOnClickListener {
-                addDeleteBlockListener?.let { it(block) }
+                deleteExerciseListener?.invoke(block)
             }
 
             btAddSet.setOnClickListener {
-                addAddSetListener?.let { it(block) }
+                addSetListener?.invoke(block)
             }
 
-            setAdapter.setWeightAndRepsListener { str ->
-                setAdapterListener?.let { it(block, str) }
+            setAdapter.changeSetListener = { setInfo ->
+                changeSetListener?.invoke(block, setInfo)
+            }
+
+            setAdapter.deleteSetListener = { position ->
+                deleteSetListener?.invoke(block, position)
             }
         }
     }
 
-    private var addDeleteBlockListener: ((Block) -> Unit)? = null
-
-    fun setOnDeleteListener(listener: (Block) -> Unit) {
-        addDeleteBlockListener = listener
-    }
-
-    private var addAddSetListener: ((Block) -> Unit)? = null
-
-    fun setAddSetListener(listener: (Block) -> Unit) {
-        addAddSetListener = listener
-    }
-
-    private var setAdapterListener: ((Block, List<String>) -> Unit)? = null
-
-    fun addSetAdapterListener(listener: (Block, List<String>) -> Unit) {
-        setAdapterListener = listener
+    override fun getItemCount(): Int {
+        return differ.currentList.size
     }
 }
