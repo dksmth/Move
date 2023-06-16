@@ -5,12 +5,13 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.move.models.Block
 import com.example.move.models.ExerciseItem
 import com.example.move.models.Workout
 
 @Database(
-    entities = [ExerciseItem::class, Workout::class],
-    version = 2
+    entities = [ExerciseItem::class, Workout::class, Block::class],
+    version = 3
 )
 @TypeConverters(Converters::class)
 abstract class ExerciseDatabase: RoomDatabase()  {

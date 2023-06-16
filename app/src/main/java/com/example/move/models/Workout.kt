@@ -8,6 +8,6 @@ import androidx.room.PrimaryKey
 )
 data class Workout (
     @PrimaryKey(autoGenerate = true)
-    var dbID: Int? = null,
+    var workout_id: Int? = null,
     var blocks: List<Block>? = null
     )

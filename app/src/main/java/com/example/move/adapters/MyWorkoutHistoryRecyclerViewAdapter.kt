@@ -20,7 +20,7 @@ class MyWorkoutHistoryRecyclerViewAdapter() : RecyclerView.Adapter<MyWorkoutHist
 
     private val differCallback = object : DiffUtil.ItemCallback<Workout>() {
         override fun areItemsTheSame(oldItem: Workout, newItem: Workout): Boolean {
-            return oldItem.dbID == newItem.dbID
+            return oldItem.workout_id == newItem.workout_id
         }
 
         override fun areContentsTheSame(oldItem: Workout, newItem: Workout): Boolean {

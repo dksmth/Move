@@ -1,6 +1,7 @@
 package com.example.move.db
 
 import androidx.room.*
+import com.example.move.models.Block
 import com.example.move.models.ExerciseItem
 import com.example.move.models.Workout
 
@@ -19,6 +20,9 @@ interface ExerciseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(exerciseList: List<ExerciseItem>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBlocks(data: Block): Long
+
     @Query("DELETE FROM exercises")
     suspend fun deleteAllExercises()
 
@@ -28,10 +32,13 @@ interface ExerciseDao {
     @Query("SELECT * FROM workouts")
     suspend fun getAllWorkouts(): List<Workout>
 
-    @Query("SELECT * FROM workouts ORDER BY dbID DESC LIMIT 1")
+    @Query("SELECT * FROM workouts ORDER BY workout_id DESC LIMIT 1")
     suspend fun getLastWorkout(): Workout
 
     @Query("DELETE FROM workouts")
     suspend fun deleteAllWorkouts()
+
+    @Query("SELECT * FROM workouts JOIN blocks ON workouts.workout_id = blocks.workout_id")
+    fun readBlocks(): Map<Workout, List<Block>>
 
 }

@@ -2,6 +2,7 @@ package com.example.move.repo
 
 import com.example.move.api.RetrofitInstance
 import com.example.move.db.ExerciseDatabase
+import com.example.move.models.Block
 import com.example.move.models.ExerciseItem
 import com.example.move.models.Workout
 
@@ -28,4 +29,8 @@ class ExercisesRepository(
     suspend fun getLastWorkout() = db.getExerciseDao().getLastWorkout()
 
     suspend fun deleteAllWorkouts() = db.getExerciseDao().deleteAllWorkouts()
+
+    suspend fun readBlocks()= db.getExerciseDao().readBlocks()
+
+    suspend fun insertBlocks(data: Block) = db.getExerciseDao().insertBlocks(data = data)
 }

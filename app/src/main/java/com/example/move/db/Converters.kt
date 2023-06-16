@@ -1,5 +1,6 @@
 package com.example.move.db
 
+import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.room.TypeConverter
 import com.example.move.models.*
 
@@ -15,6 +16,32 @@ class Converters {
 //
 //        return OneSet(weight.toInt(), reps.toInt())
 //    }
+
+//    @TypeConverter
+//    fun fromSetToString(set: OneSet): String {
+//        return set.toString()
+//    }
+
+    @TypeConverter
+    fun fromExercise(exercise: ExerciseItem): String {
+        return exercise.toString()
+    }
+
+    @TypeConverter
+    fun toExercise(str: String): ExerciseItem {
+        return ExerciseItem()
+    }
+
+    @TypeConverter
+    fun fromOneSet(set: List<OneSet>): String {
+        return set.toString()
+    }
+
+    @TypeConverter
+    fun toOneSet(str: String): List<OneSet> {
+        return listOf(OneSet(0,0))
+    }
+
 
     @TypeConverter
     fun fromListOfBlocksToString(list: List<Block>): String {

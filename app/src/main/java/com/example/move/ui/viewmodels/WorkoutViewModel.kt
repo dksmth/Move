@@ -1,6 +1,7 @@
 package com.example.move.ui.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.move.db.ExerciseDao
@@ -69,6 +70,22 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     }
 
     suspend fun insertWorkout() {
-        dao.upsertWorkout(workout = Workout(blocks = workout.value))
+        Log.d("BeforeInserting", workout.value.toString())
+
+        var check = workout.value
+
+        val smth = dao.upsertWorkout(workout = Workout(blocks = check))
+
+        Log.d("AfterInserting", workout.value.toString())
+
+        check?.forEach {
+            it.workout_id = smth.toInt()
+        }
+
+        Log.d("BeforeSaving", workout.value.toString())
+
+        check?.forEach {
+            dao.insertBlocks(it)
+        }
     }
 }

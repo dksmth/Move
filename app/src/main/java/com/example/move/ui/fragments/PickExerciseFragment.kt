@@ -60,7 +60,7 @@ class PickExerciseFragment : Fragment() {
                 Toast.makeText(requireActivity(), "Cant add another", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                workoutViewModel.addExercise(block = Block(exercise))
+                workoutViewModel.addExercise(block = Block(exercise = exercise))
                 navigateToWorkoutFragment()
             }
         }
