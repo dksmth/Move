@@ -16,7 +16,6 @@ class WorkoutFinishedFragment : Fragment() {
 
     private val args: WorkoutFinishedFragmentArgs by navArgs()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -34,7 +33,8 @@ class WorkoutFinishedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.btGoToExercises.setOnClickListener {
-            navigateToExercises()
+            // navigateToExercises()
+            navigateToWorkoutList()
         }
 
         binding.tvLastWorkout.text = args.lastWorkoutInfo
@@ -44,6 +44,12 @@ class WorkoutFinishedFragment : Fragment() {
     private fun navigateToExercises() {
         findNavController().navigate(
             WorkoutFinishedFragmentDirections.actionWorkoutFinishedFragmentToExerciseListFragment()
+        )
+    }
+
+    private fun navigateToWorkoutList() {
+        findNavController().navigate(
+            WorkoutFinishedFragmentDirections.actionWorkoutFinishedFragmentToWorkoutHistoryFragment()
         )
     }
 }

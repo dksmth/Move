@@ -20,7 +20,7 @@ interface ExerciseDao {
     suspend fun upsertAll(exerciseList: List<ExerciseItem>)
 
     @Query("DELETE FROM exercises")
-    suspend fun deleteAll()
+    suspend fun deleteAllExercises()
 
     @Query("SELECT EXISTS(SELECT * FROM exercises)")
     suspend fun exists(): Boolean
@@ -30,5 +30,8 @@ interface ExerciseDao {
 
     @Query("SELECT * FROM workouts ORDER BY dbID DESC LIMIT 1")
     suspend fun getLastWorkout(): Workout
+
+    @Query("DELETE FROM workouts")
+    suspend fun deleteAllWorkouts()
 
 }

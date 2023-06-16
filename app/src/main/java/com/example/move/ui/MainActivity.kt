@@ -19,6 +19,8 @@ import com.example.move.repo.ExercisesRepository
 import com.example.move.ui.fragments.WorkoutFinishedFragment
 import com.example.move.ui.viewmodels.ExercisesViewModel
 import com.example.move.ui.viewmodels.ExercisesViewModelProvideFactory
+import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
+import com.example.move.ui.viewmodels.WorkoutHistoryViewModelProvideFactory
 import kotlinx.coroutines.launch
 
 
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     lateinit var viewModel: ExercisesViewModel
+    lateinit var workoutHistoryViewModel: WorkoutHistoryViewModel
 
     private val sharedPref: SharedPreferences? by lazy {
         this.getPreferences(Context.MODE_PRIVATE)
@@ -42,7 +45,12 @@ class MainActivity : AppCompatActivity() {
         val repository = ExercisesRepository(ExerciseDatabase(this))
         val viewModelProvideFactory = ExercisesViewModelProvideFactory(repository)
 
+        val otherFactory = WorkoutHistoryViewModelProvideFactory(repository)
+
         viewModel = ViewModelProvider(this, viewModelProvideFactory)[ExercisesViewModel::class.java]
+        workoutHistoryViewModel =
+            ViewModelProvider(this, otherFactory)[WorkoutHistoryViewModel::class.java]
+
 
         val exercisesRepository = ExercisesRepository(db = ExerciseDatabase.invoke(this))
 

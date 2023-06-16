@@ -18,4 +18,10 @@ data class ExerciseItem(
     val id: String,
     var name: String,
     val target: String
-) : Parcelable
+) : Parcelable {
+    constructor() : this(dbID = null, bodyPart = "abs", equipment = "abs",
+        gifUrl = "abs", id = "abs", name = "abs", target = "abs")
+
+    constructor(name: String): this(dbID = null, bodyPart = "abs", equipment = "abs",
+        gifUrl = "abs", id = "abs", name = name, target = "abs")
+}
