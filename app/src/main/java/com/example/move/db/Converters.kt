@@ -1,26 +1,15 @@
 package com.example.move.db
 
-import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.room.TypeConverter
-import com.example.move.models.*
+import com.example.move.models.Block
+import com.example.move.models.ExerciseItem
+import com.example.move.models.OneSet
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class Converters {
 
-
-//    @TypeConverter
-//    fun fromStringToSet(string: String): OneSet {
-//
-//        val smth = string.substringAfter('=')
-//        val weight = smth.substringBefore(',')
-//        val reps = smth.substringAfter('=').replace(")", "")
-//
-//        return OneSet(weight.toInt(), reps.toInt())
-//    }
-
-//    @TypeConverter
-//    fun fromSetToString(set: OneSet): String {
-//        return set.toString()
-//    }
+    private val gson = Gson()
 
     @TypeConverter
     fun fromExercise(exercise: ExerciseItem): String {
@@ -42,51 +31,18 @@ class Converters {
         return listOf(OneSet(0,0))
     }
 
-
     @TypeConverter
-    fun fromListOfBlocksToString(list: List<Block>): String {
-        return list.joinToString(separator = "/")
+    fun fromBlockToString(list: List<Block>): String {
+        return gson.toJson(list)
     }
 
     @TypeConverter
     fun fromStringToBlocks(str: String): List<Block> {
 
-        val result = mutableListOf<Block>()
+        val listType = object : TypeToken<List<Block>>() {}.type
 
-        if (str.isBlank()) return emptyList()
-
-        val blocks = str.split("/")
-
-        blocks.forEach { block ->
-
-            val resultingBlock = Block()
-
-            val nameAndSets = block.split(":")
-
-            resultingBlock.exercise = ExerciseItem(name = nameAndSets[0])
-
-            val sets = nameAndSets[1].split(";")
-
-            val trueSets = mutableListOf<OneSet>()
-
-            sets.forEach { oneSetString ->
-                val weight = oneSetString.substringAfter("weight=").substringBefore(",")
-                val reps = oneSetString.substringAfter("reps=").substringBefore(")")
-
-                trueSets.add(OneSet(weight.toInt(), reps.toInt()))
-            }
-
-            resultingBlock.listOfSets = trueSets
-
-            result.add(resultingBlock)
-        }
-
-        return result
+        return gson.fromJson(str, listType)
 
     }
 
-//    @TypeConverter
-//    fun fromStringToWorkout(str: String): Workout {
-//        return Workout(blocks = listOf(Block(comment = str)))
-//    }
 }

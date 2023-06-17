@@ -100,6 +100,8 @@ class WorkoutFragment : Fragment() {
         binding.rvBlocks.apply {
             adapter = blockAdapter
             layoutManager = LinearLayoutManager(activity)
+
+            itemAnimator = null
         }
     }
 

@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.move.adapters.MyWorkoutHistoryRecyclerViewAdapter
+import com.example.move.adapters.WorkoutHistoryAdapter
 import com.example.move.databinding.FragmentItemListBinding
 import com.example.move.ui.MainActivity
 import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
@@ -19,18 +20,13 @@ import kotlinx.coroutines.launch
  */
 class WorkoutHistoryFragment : Fragment() {
 
-
     private var _binding: FragmentItemListBinding? = null
     private val binding get() = _binding!!
 
     lateinit var viewModel: WorkoutHistoryViewModel
 
-    lateinit var workoutsAdapter: MyWorkoutHistoryRecyclerViewAdapter
+    lateinit var workoutsAdapter: WorkoutHistoryAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,10 +40,18 @@ class WorkoutHistoryFragment : Fragment() {
     }
 
     private fun setupBlockAdapter() {
-        workoutsAdapter = MyWorkoutHistoryRecyclerViewAdapter()
+        workoutsAdapter = WorkoutHistoryAdapter()
+
         binding.root.apply {
             adapter = workoutsAdapter
             layoutManager = LinearLayoutManager(activity)
+
+            addItemDecoration(
+                DividerItemDecoration(
+                    activity,
+                    (layoutManager as LinearLayoutManager).orientation
+                )
+            )
         }
     }
 
@@ -60,8 +64,8 @@ class WorkoutHistoryFragment : Fragment() {
             viewModel.getAllWorkouts()
         }
 
-        viewModel.workouts.observe(viewLifecycleOwner) {
-            workoutsAdapter.differ.submitList(it)
+        viewModel.mapWorkoutToBlocks.observe(viewLifecycleOwner) { map ->
+            workoutsAdapter.differ.submitList(map.keys.toList())
         }
     }
 }

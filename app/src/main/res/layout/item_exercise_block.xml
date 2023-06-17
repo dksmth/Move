@@ -7,15 +7,16 @@
 
     <TextView
         android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:ellipsize="end"
-        android:maxLines="3"
+        android:maxLines="1"
         android:text="@string/tvTitleOfExercise"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/rvExercise"
+        app:layout_constraintEnd_toStartOf="@+id/btDeleteButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,9 +33,10 @@
 
     <Button
         android:id="@+id/btDeleteButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
 
+        android:contentDescription="@string/btDeleteExerciseContentDescription"
         app:layout_constraintBottom_toTopOf="@+id/rvExercise"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

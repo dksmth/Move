@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.move.databinding.FragmentItemBinding
+import com.example.move.models.OneSet
 import com.example.move.models.Workout
 
 
-class MyWorkoutHistoryRecyclerViewAdapter() : RecyclerView.Adapter<MyWorkoutHistoryRecyclerViewAdapter.ViewHolder>() {
+class WorkoutHistoryAdapter() :
+    RecyclerView.Adapter<WorkoutHistoryAdapter.ViewHolder>() {
 
 
     inner class ViewHolder(binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -38,20 +40,30 @@ class MyWorkoutHistoryRecyclerViewAdapter() : RecyclerView.Adapter<MyWorkoutHist
                 false
             )
         )
-
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = differ.currentList[position]
 
         holder.apply {
-            body.text = item.blocks.toString()
+            var string = ""
+
+            item.blocks?.forEach { block ->
+
+                val sets = setsToString(block.listOfSets)
+
+                string += block.exercise?.name + "\n" + sets + "\n"
+            }
+
+            body.text = string
             workoutName.text = item.blocks?.size.toString()
         }
     }
 
+    private fun setsToString(blocks: List<OneSet>): String {
+        return blocks.joinToString(separator = "\n", transform = { "${it.weight} x ${it.reps}" })
+    }
+
     override fun getItemCount(): Int = differ.currentList.size
-
-
 
 }

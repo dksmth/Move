@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -24,7 +25,7 @@ class SetAdapter : RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
         val setNumber: TextView = itemView.findViewById(R.id.tvNumberOfSets)
         var weight: EditText = itemView.findViewById(R.id.etWeight)
         val reps: EditText = itemView.findViewById(R.id.etReps)
-        val btDelete: Button = itemView.findViewById(R.id.btDeleteSet)
+        val btDelete: ImageButton = itemView.findViewById(R.id.btDeleteSet)
 
         fun addListener(inputField: EditText, isReps: Boolean) {
             inputField.addTextChangedListener(object : TextWatcher {
@@ -81,12 +82,14 @@ class SetAdapter : RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
         val positionForPublic = holder.adapterPosition + 1
 
         holder.apply {
-            weight.setText(set.weight.toString())
-            reps.setText(set.reps.toString())
+
+            if (set.weight != 0) weight.setText(set.weight.toString())
+            if (set.reps != 0) reps.setText(set.reps.toString())
+
             setNumber.text = positionForPublic.toString()
 
             btDelete.setOnClickListener {
-                deleteSetListener?.invoke(adapterPosition)
+                deleteSetListener?.invoke(position)
             }
 
             addListener(weight, isReps = false)
