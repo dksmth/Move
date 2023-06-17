@@ -28,7 +28,7 @@ class Converters {
 
     @TypeConverter
     fun toOneSet(str: String): List<OneSet> {
-        return listOf(OneSet(0,0))
+        return listOf(OneSet(0.0,0))
     }
 
     @TypeConverter

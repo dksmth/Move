@@ -108,6 +108,9 @@ class ExerciseListFragment : Fragment() {
 
     private fun navigate(it: ExerciseItem) {
 
+        binding.searchView.setQuery("", false)
+        binding.searchView.clearFocus()
+
         findNavController().navigate(
             with(ExerciseListFragmentDirections) {
                 actionExerciseListFragmentToExerciseInfoFragment(it)

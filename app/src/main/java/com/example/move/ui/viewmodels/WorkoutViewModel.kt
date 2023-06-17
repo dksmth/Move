@@ -1,7 +1,6 @@
 package com.example.move.ui.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.example.move.db.ExerciseDao
@@ -9,6 +8,8 @@ import com.example.move.db.ExerciseDatabase
 import com.example.move.models.Block
 import com.example.move.models.OneSet
 import com.example.move.models.Workout
+import com.example.move.util.onlyFirstCharCapitalized
+import java.time.LocalDate
 
 class WorkoutViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -19,6 +20,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     fun addExercise(block: Block) {
         workout.value = workout.value?.plus(block)
     }
+
     fun deleteExercise(block: Block) {
         workout.value = workout.value?.minus(block)
     }
@@ -26,7 +28,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     fun addSet(block: Block) {
         val chosenBlock = workout.value?.find { it == block }
 
-        chosenBlock!!.listOfSets = (chosenBlock.listOfSets + OneSet(0, 0)) as MutableList<OneSet>
+        chosenBlock!!.listOfSets = (chosenBlock.listOfSets + OneSet(0.0, 0)) as MutableList<OneSet>
     }
 
     fun changeSet(block: Block, strings: List<String>) {
@@ -45,7 +47,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         val chosenBlock = workout.value?.find { it == block }
 
         if (type == "weight") {
-            chosenBlock!!.listOfSets[position.toInt()].weight = returnedNumber.toInt()
+            chosenBlock!!.listOfSets[position.toInt()].weight = returnedNumber
         } else {
             chosenBlock!!.listOfSets[position.toInt()].reps = returnedNumber.toInt()
         }
@@ -70,22 +72,26 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     }
 
     suspend fun insertWorkout() {
-        Log.d("BeforeInserting", workout.value.toString())
 
-        var check = workout.value
+        val check = workout.value
 
-        val smth = dao.upsertWorkout(workout = Workout(blocks = check))
+        val time = getWeekdayAndDate()
 
-        Log.d("AfterInserting", workout.value.toString())
+        val smth = dao.upsertWorkout(workout = Workout(blocks = check, dateTime = time))
 
         check?.forEach {
             it.workout_id = smth.toInt()
         }
 
-        Log.d("BeforeSaving", workout.value.toString())
-
         check?.forEach {
             dao.insertBlocks(it)
+        }
+    }
+
+    private fun getWeekdayAndDate(): String {
+        with(LocalDate.now()) {
+            return onlyFirstCharCapitalized(dayOfWeek.toString()) +
+                    ", " + onlyFirstCharCapitalized(month.toString()) + " " + dayOfMonth
         }
     }
 }

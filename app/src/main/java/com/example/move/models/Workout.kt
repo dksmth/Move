@@ -9,5 +9,6 @@ import androidx.room.PrimaryKey
 data class Workout (
     @PrimaryKey(autoGenerate = true)
     var workout_id: Int? = null,
-    var blocks: List<Block>? = null
+    var blocks: List<Block>? = null,
+    var dateTime: String
     )

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.move.R
 import com.example.move.models.OneSet
+import com.example.move.util.trimLastIf
 
 class SetAdapter : RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
 
@@ -83,7 +84,7 @@ class SetAdapter : RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
 
         holder.apply {
 
-            if (set.weight != 0) weight.setText(set.weight.toString())
+            if (set.weight != 0.0) weight.setText(set.weight.toString().trimLastIf(".0"))
             if (set.reps != 0) reps.setText(set.reps.toString())
 
             setNumber.text = positionForPublic.toString()

@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.move.databinding.FragmentItemBinding
 import com.example.move.models.OneSet
 import com.example.move.models.Workout
+import com.example.move.util.roundToDecimal
+import com.example.move.util.trimLastIf
 
 
 class WorkoutHistoryAdapter() :
@@ -56,12 +58,18 @@ class WorkoutHistoryAdapter() :
             }
 
             body.text = string
-            workoutName.text = item.blocks?.size.toString()
+            workoutName.text = item.dateTime
         }
     }
 
     private fun setsToString(blocks: List<OneSet>): String {
-        return blocks.joinToString(separator = "\n", transform = { "${it.weight} x ${it.reps}" })
+        return blocks.joinToString(
+            separator = "\n",
+            transform = { set ->
+                "${set.weight} x ${set.reps}  ${
+                    set.oneRepMax.roundToDecimal(1).trimLastIf(",0")
+                }"
+            })
     }
 
     override fun getItemCount(): Int = differ.currentList.size
