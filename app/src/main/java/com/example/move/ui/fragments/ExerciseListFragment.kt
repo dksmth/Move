@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.coroutineScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.move.adapters.ExercisesAdapter
@@ -18,6 +20,9 @@ import com.example.move.ui.MainActivity
 import com.example.move.ui.viewmodels.ExercisesViewModel
 import com.example.move.ui.viewmodels.WorkoutViewModel
 import com.example.move.util.Resource
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class ExerciseListFragment : Fragment() {
@@ -34,7 +39,7 @@ class ExerciseListFragment : Fragment() {
     private lateinit var exercisesAdapter: ExercisesAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View {
 
         _binding = FragmentExercisesBinding.inflate(inflater, container, false)
@@ -65,44 +70,52 @@ class ExerciseListFragment : Fragment() {
             handleResponse(response)
         }
 
-        setSearchListener()
-    }
-
-    private fun setSearchListener() {
         binding.searchView.setOnQueryTextListener(
-            object :
-                SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
+            DebouncingQueryTextListener(lifecycle) { newText ->
+                newText?.let {
+                    updateList(it)
                 }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    filter(newText)
-                    return false
-                }
-            })
+            }
+        )
     }
 
-    private fun showToastForDuplicateExercise() {
-        Toast.makeText(requireActivity(), "Cant add another", Toast.LENGTH_SHORT).show()
-    }
+    internal class DebouncingQueryTextListener(
+        lifecycle: Lifecycle,
+        private val onDebouncingQueryTextChange: (String?) -> Unit,
+    ) : SearchView.OnQueryTextListener {
 
-    fun filter(str: String?) {
-        val allExercises = viewModel.getItems()
-        var query = ""
+        var debouncePeriod: Long = 300
+        private val coroutineScope = lifecycle.coroutineScope
+        private var searchJob: Job? = null
 
-        if (str != null) {
-            query = str
-            binding.rvAllExercises.scrollToPosition(0)
+        override fun onQueryTextSubmit(query: String?): Boolean {
+            return false
         }
 
-        val filteredList = allExercises.filter { it.name.lowercase().contains(query.lowercase()) }
+        override fun onQueryTextChange(newText: String?): Boolean {
+            searchJob?.cancel()
+            searchJob = coroutineScope.launch {
+                newText?.let {
+                    delay(debouncePeriod)
+                    onDebouncingQueryTextChange(newText)
+                }
+            }
+            return false
+        }
+    }
 
-        exercisesAdapter.filterList(filteredList)
+    private fun updateList(str: String) {
+        val filteredList = viewModel.filter(str)
+
+        exercisesAdapter.differ.submitList(viewModel.filter(str))
 
         if (filteredList.isEmpty()) {
             Toast.makeText(requireActivity(), "Nothing found", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showToastForDuplicateExercise() {
+        Toast.makeText(requireActivity(), "Cant add another", Toast.LENGTH_SHORT).show()
     }
 
     private fun handleResponse(response: Resource<List<ExerciseItem>>) {

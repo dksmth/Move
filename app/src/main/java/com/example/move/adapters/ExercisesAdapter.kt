@@ -62,10 +62,6 @@ class ExercisesAdapter: RecyclerView.Adapter<ExercisesAdapter.ExerciseViewHolder
             }
         }
 
-    fun filterList(filteredExercises: List<ExerciseItem>) {
-        differ.submitList(filteredExercises)
-    }
-
     private fun ExerciseViewHolder.loadImageInView(
         exercise: ExerciseItem,
         holder: ExerciseViewHolder

@@ -6,10 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.move.models.ExerciseItem
 import com.example.move.repo.ExercisesRepository
 import com.example.move.util.Resource
+import com.example.move.util.capitalized
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
-import java.util.*
 
 class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) : ViewModel() {
 
@@ -59,20 +59,15 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) :
                 exercises.postValue(Resource.Success(list))
             }
         }
-
     }
 
     private fun parseNames(str: String): String {
         return str.split(" ").joinToString(separator = " ") { it.capitalized() }
     }
 
-    private fun String.capitalized(): String = replaceFirstChar {
-        if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
-    }
+    fun filter(str: String): List<ExerciseItem> =
+        exercises.value?.data?.filter { it.name.lowercase().contains(str.lowercase()) }!!
 
-    fun getItems(): List<ExerciseItem> {
-        return exercises.value?.data!!
-    }
 
     private fun handleResponse(response: Response<List<ExerciseItem>>): Resource<List<ExerciseItem>> {
         if (response.isSuccessful) {
