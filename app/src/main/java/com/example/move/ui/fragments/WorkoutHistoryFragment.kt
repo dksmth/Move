@@ -43,13 +43,6 @@ class WorkoutHistoryFragment : Fragment() {
         binding.root.apply {
             adapter = workoutsAdapter
             layoutManager = LinearLayoutManager(activity)
-
-            addItemDecoration(
-                DividerItemDecoration(
-                    activity,
-                    (layoutManager as LinearLayoutManager).orientation
-                )
-            )
         }
     }
 

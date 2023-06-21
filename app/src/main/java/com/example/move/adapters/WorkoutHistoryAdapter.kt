@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.move.databinding.FragmentItemBinding
+import com.example.move.databinding.CardsForWorkoutHistoryBinding
 import com.example.move.models.OneSet
 import com.example.move.models.Workout
 import com.example.move.util.roundToDecimal
@@ -16,10 +16,10 @@ class WorkoutHistoryAdapter() :
     RecyclerView.Adapter<WorkoutHistoryAdapter.ViewHolder>() {
 
 
-    inner class ViewHolder(binding: FragmentItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(binding: CardsForWorkoutHistoryBinding) : RecyclerView.ViewHolder(binding.root) {
         val body = binding.workoutBody
-        val workoutName = binding.workoutName
-        val dateTime = binding.dateTime
+        val workoutName = binding.tvDate
+        val bestSet = binding.bestSetsColumn
     }
 
     private val differCallback = object : DiffUtil.ItemCallback<Workout>() {
@@ -36,7 +36,7 @@ class WorkoutHistoryAdapter() :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            FragmentItemBinding.inflate(
+            CardsForWorkoutHistoryBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -48,16 +48,19 @@ class WorkoutHistoryAdapter() :
         val item = differ.currentList[position]
 
         holder.apply {
-            var string = ""
+            var setsAndName = "\n"
+            var bestSetString = "\n"
 
             item.blocks?.forEach { block ->
+                val bestSet = block.listOfSets.maxBy { it.oneRepMax }
 
-                val sets = setsToString(block.listOfSets)
+                bestSetString += "${bestSet.weight} x ${bestSet.reps}" + "\n"
 
-                string += block.exercise?.name + "\n" + sets + "\n"
+                setsAndName += block.listOfSets.size.toString() + " x " + block.exercise?.name + "\n"
             }
 
-            body.text = string
+            body.text = setsAndName
+            bestSet.text = bestSetString
             workoutName.text = item.dateTime
         }
     }

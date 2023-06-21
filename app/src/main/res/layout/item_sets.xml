@@ -56,7 +56,7 @@
         android:adjustViewBounds="false"
         android:background="#00FFFFFF"
         android:cropToPadding="true"
-        android:src="@drawable/close_fill0_wght500_grad0_opsz48"
+        android:src="@drawable/delete_set_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="0.8"

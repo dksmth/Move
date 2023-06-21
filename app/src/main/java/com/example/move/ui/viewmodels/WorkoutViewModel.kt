@@ -84,9 +84,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         workout.value?.any { it.exercise == exercise }!!
 
     suspend fun insertWorkout() {
-
         val check = workout.value
-
         val time = getWeekdayAndDate()
 
         val workoutId = dao.upsertWorkout(workout = Workout(blocks = check, dateTime = time))
