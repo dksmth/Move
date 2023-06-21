@@ -15,9 +15,7 @@ import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-/**
- * A fragment representing a list of Items.
- */
+
 class WorkoutHistoryFragment : Fragment() {
 
     private var _binding: FragmentItemListBinding? = null

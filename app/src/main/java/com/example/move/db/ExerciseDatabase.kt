@@ -11,7 +11,7 @@ import com.example.move.models.Workout
 
 @Database(
     entities = [ExerciseItem::class, Workout::class, Block::class],
-    version = 6
+    version = 10
 )
 @TypeConverters(Converters::class)
 abstract class ExerciseDatabase: RoomDatabase()  {

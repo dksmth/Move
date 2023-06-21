@@ -13,22 +13,27 @@ class Converters {
 
     @TypeConverter
     fun fromExercise(exercise: ExerciseItem): String {
-        return exercise.toString()
+        return gson.toJson(exercise)
     }
 
     @TypeConverter
     fun toExercise(str: String): ExerciseItem {
-        return ExerciseItem()
+        val type = object : TypeToken<ExerciseItem>() {}.type
+
+        return gson.fromJson(str, type)
     }
 
     @TypeConverter
     fun fromOneSet(set: List<OneSet>): String {
-        return set.toString()
+        return gson.toJson(set)
     }
 
     @TypeConverter
     fun toOneSet(str: String): List<OneSet> {
-        return listOf(OneSet(0.0,0))
+
+        val listType = object : TypeToken<List<OneSet>>() {}.type
+
+        return gson.fromJson(str, listType)
     }
 
     @TypeConverter

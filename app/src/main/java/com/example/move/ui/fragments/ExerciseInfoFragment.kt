@@ -1,15 +1,19 @@
 package com.example.move.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.move.databinding.FragmentExerciseInfoBinding
-import com.example.move.ui.viewmodels.ExercisesViewModel
 import com.example.move.ui.MainActivity
+import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class ExerciseInfoFragment : Fragment() {
@@ -17,7 +21,7 @@ class ExerciseInfoFragment : Fragment() {
     private var _binding: FragmentExerciseInfoBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var viewModel: ExercisesViewModel
+    lateinit var viewModel: WorkoutHistoryViewModel
 
     private val args: ExerciseInfoFragmentArgs by navArgs()
 
@@ -34,9 +38,21 @@ class ExerciseInfoFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = (activity as MainActivity).viewModel
+        viewModel = (activity as MainActivity).workoutHistoryViewModel
 
         val exercise = args.exercise
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.getExerciseHistory(exercise)
+        }
+
+        viewModel.historyOfExercise.observe(viewLifecycleOwner) { listOfExercise ->
+            val check = listOfExercise.joinToString(separator = "\n") { it.listOfSets.toString() }
+
+            Log.d("check", listOfExercise.joinToString { it.exercise.toString() })
+
+            binding.historyOfExercise.text = check
+        }
 
         binding.apply {
             Glide.with(requireActivity())

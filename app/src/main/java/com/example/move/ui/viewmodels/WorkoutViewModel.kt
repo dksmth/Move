@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.move.db.ExerciseDao
 import com.example.move.db.ExerciseDatabase
 import com.example.move.models.Block
+import com.example.move.models.ExerciseItem
 import com.example.move.models.OneSet
 import com.example.move.models.Workout
 import com.example.move.util.onlyFirstCharCapitalized
@@ -17,8 +18,12 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
 
     private var dao: ExerciseDao = ExerciseDatabase(application).getExerciseDao()
 
-    fun addExercise(block: Block) {
-        workout.value = workout.value?.plus(block)
+    var openedForResult = false
+
+    fun addExercise(exercise: ExerciseItem) {
+        workout.value = workout.value?.plus(Block(exercise = exercise))
+
+        setFlagForOpeningWithResult(false)
     }
 
     fun deleteExercise(block: Block) {
@@ -29,6 +34,10 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         val chosenBlock = workout.value?.find { it == block }
 
         chosenBlock!!.listOfSets = (chosenBlock.listOfSets + OneSet(0.0, 0)) as MutableList<OneSet>
+    }
+
+    fun setFlagForOpeningWithResult(opened: Boolean) {
+        openedForResult = opened
     }
 
     fun changeSet(block: Block, strings: List<String>) {
@@ -71,19 +80,19 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         return workout.value.toString()
     }
 
+    fun isInWorkout(exercise: ExerciseItem): Boolean =
+        workout.value?.any { it.exercise == exercise }!!
+
     suspend fun insertWorkout() {
 
         val check = workout.value
 
         val time = getWeekdayAndDate()
 
-        val smth = dao.upsertWorkout(workout = Workout(blocks = check, dateTime = time))
+        val workoutId = dao.upsertWorkout(workout = Workout(blocks = check, dateTime = time))
 
         check?.forEach {
-            it.workout_id = smth.toInt()
-        }
-
-        check?.forEach {
+            it.workout_id = workoutId.toInt()
             dao.insertBlocks(it)
         }
     }

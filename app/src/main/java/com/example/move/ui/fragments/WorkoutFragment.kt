@@ -53,7 +53,8 @@ class WorkoutFragment : Fragment() {
         }
 
         binding.btAddExercise.setOnClickListener {
-            navigateToPickExerciseFragment()
+            viewModel.setFlagForOpeningWithResult(true)
+            navigateToExerciseList()
         }
 
         binding.btSaveWorkout.setOnClickListener {
@@ -83,9 +84,9 @@ class WorkoutFragment : Fragment() {
         }
     }
 
-    private fun navigateToPickExerciseFragment() {
+    private fun navigateToExerciseList() {
         findNavController().navigate(
-            WorkoutFragmentDirections.actionWorkoutFragmentToPickExerciseFragment()
+            WorkoutFragmentDirections.actionWorkoutFragmentToExerciseListFragment()
         )
     }
 

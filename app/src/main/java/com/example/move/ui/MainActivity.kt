@@ -16,6 +16,7 @@ import com.example.move.R
 import com.example.move.databinding.ActivityMainBinding
 import com.example.move.db.ExerciseDatabase
 import com.example.move.repo.ExercisesRepository
+import com.example.move.ui.fragments.ExerciseInfoFragment
 import com.example.move.ui.fragments.WorkoutFinishedFragment
 import com.example.move.ui.viewmodels.ExercisesViewModel
 import com.example.move.ui.viewmodels.ExercisesViewModelProvideFactory
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity() {
             ) {
                 binding.bottomNavigationView.visibility = when (fragment) {
                     is WorkoutFinishedFragment -> View.GONE
+                    is ExerciseInfoFragment -> View.GONE
                     else -> View.VISIBLE
                 }
             }

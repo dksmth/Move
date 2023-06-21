@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.move.adapters.ExercisesAdapter
@@ -15,6 +16,7 @@ import com.example.move.databinding.FragmentExercisesBinding
 import com.example.move.models.ExerciseItem
 import com.example.move.ui.MainActivity
 import com.example.move.ui.viewmodels.ExercisesViewModel
+import com.example.move.ui.viewmodels.WorkoutViewModel
 import com.example.move.util.Resource
 
 
@@ -25,12 +27,14 @@ class ExerciseListFragment : Fragment() {
 
     lateinit var viewModel: ExercisesViewModel
 
+    private val workoutViewModel: WorkoutViewModel by lazy {
+        ViewModelProvider(requireActivity())[WorkoutViewModel::class.java]
+    }
+
     private lateinit var exercisesAdapter: ExercisesAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
         _binding = FragmentExercisesBinding.inflate(inflater, container, false)
@@ -44,35 +48,51 @@ class ExerciseListFragment : Fragment() {
 
         setupRecyclerView()
 
-        exercisesAdapter.setOnItemClickListener {
-            navigate(it)
+        exercisesAdapter.setOnItemClickListener { exercise ->
+            if (workoutViewModel.openedForResult) {
+
+                if (workoutViewModel.isInWorkout(exercise)) {
+                    showToastForDuplicateExercise()
+                } else {
+                    workoutViewModel.addExercise(exercise)
+
+                    navigateTo(WORKOUT, exercise)
+                }
+            } else navigateTo(EXERCISE_INFO, exercise)
         }
 
         viewModel.exercises.observe(viewLifecycleOwner) { response ->
             handleResponse(response)
         }
 
-        binding.searchView.setOnQueryTextListener(object :
-            SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
+        setSearchListener()
+    }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                filter(newText)
-                return false
-            }
-        })
+    private fun setSearchListener() {
+        binding.searchView.setOnQueryTextListener(
+            object :
+                SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    filter(newText)
+                    return false
+                }
+            })
+    }
+
+    private fun showToastForDuplicateExercise() {
+        Toast.makeText(requireActivity(), "Cant add another", Toast.LENGTH_SHORT).show()
     }
 
     fun filter(str: String?) {
-
         val allExercises = viewModel.getItems()
         var query = ""
 
         if (str != null) {
             query = str
-
             binding.rvAllExercises.scrollToPosition(0)
         }
 
@@ -84,7 +104,6 @@ class ExerciseListFragment : Fragment() {
             Toast.makeText(requireActivity(), "Nothing found", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     private fun handleResponse(response: Resource<List<ExerciseItem>>) {
         when (response) {
@@ -106,18 +125,24 @@ class ExerciseListFragment : Fragment() {
         }
     }
 
-    private fun navigate(it: ExerciseItem) {
-
-        binding.searchView.setQuery("", false)
-        binding.searchView.clearFocus()
+    private fun navigateTo(destination: String, exercise: ExerciseItem) {
+        clearSearchView()
 
         findNavController().navigate(
             with(ExerciseListFragmentDirections) {
-                actionExerciseListFragmentToExerciseInfoFragment(it)
+
+                when (destination) {
+                    WORKOUT -> actionExerciseListFragmentToWorkoutFragment()
+                    else -> actionExerciseListFragmentToExerciseInfoFragment(exercise)
+                }
             }
         )
     }
 
+    private fun clearSearchView() {
+        binding.searchView.setQuery("", false)
+        binding.searchView.clearFocus()
+    }
 
     private fun hideProgressBar() {
         binding.paginationProgressBar.visibility = View.INVISIBLE
@@ -127,7 +152,6 @@ class ExerciseListFragment : Fragment() {
         binding.paginationProgressBar.visibility = View.VISIBLE
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -135,9 +159,15 @@ class ExerciseListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         exercisesAdapter = ExercisesAdapter()
+
         binding.rvAllExercises.apply {
             adapter = exercisesAdapter
             layoutManager = LinearLayoutManager(activity)
         }
+    }
+
+    companion object {
+        const val WORKOUT = "Workout"
+        const val EXERCISE_INFO = "Exercise info"
     }
 }

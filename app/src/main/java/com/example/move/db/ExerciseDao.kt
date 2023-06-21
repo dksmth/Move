@@ -39,6 +39,11 @@ interface ExerciseDao {
     suspend fun deleteAllWorkouts()
 
     @Query("SELECT * FROM workouts JOIN blocks ON workouts.workout_id = blocks.workout_id")
-    fun readBlocks(): Map<Workout, List<Block>>
+    suspend fun readBlocks(): Map<Workout, List<Block>>
 
+    @Query("SELECT * FROM blocks where block_id = :block_id")
+    suspend fun getBlocksWithID(block_id: Int): List<Block>
+
+    @Query("SELECT * FROM blocks where exercise = :exercise")
+    suspend fun getBlocksWithExercises(exercise: ExerciseItem): List<Block>
 }

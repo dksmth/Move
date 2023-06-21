@@ -12,7 +12,11 @@
         <action
             android:id="@+id/action_exerciseListFragment_to_exerciseInfoFragment"
             app:destination="@id/exerciseInfoFragment"
+            app:popUpTo="@id/exerciseListFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_exerciseListFragment_to_workoutFragment"
+            app:destination="@id/workoutFragment" />
     </fragment>
     <fragment
         android:id="@+id/exerciseInfoFragment"
@@ -28,28 +32,13 @@
         android:name="com.example.move.ui.fragments.WorkoutFragment"
         android:label="fragment_workout"
         tools:layout="@layout/fragment_workout" >
-        <argument
-            android:name="chosenExercise"
-            app:argType="com.example.move.models.ExerciseItem"
-            app:nullable="true"
-            android:defaultValue="@null" />
-        <action
-            android:id="@+id/action_workoutFragment_to_pickExerciseFragment"
-            app:destination="@id/pickExerciseFragment" />
         <action
             android:id="@+id/action_workoutFragment_to_workoutFinishedFragment"
             app:destination="@id/workoutFinishedFragment"
             app:launchSingleTop="true" />
-    </fragment>
-    <fragment
-        android:id="@+id/pickExerciseFragment"
-        android:name="com.example.move.ui.fragments.PickExerciseFragment"
-        android:label="PickExerciseFragment" >
         <action
-            android:id="@+id/action_pickExerciseFragment_to_workoutFragment"
-            app:destination="@id/workoutFragment"
-            app:popUpTo="@id/pickExerciseFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_workoutFragment_to_exerciseListFragment"
+            app:destination="@id/exerciseListFragment" />
     </fragment>
     <fragment
         android:id="@+id/workoutFinishedFragment"
@@ -65,7 +54,8 @@
             app:argType="string" />
         <action
             android:id="@+id/action_workoutFinishedFragment_to_workoutHistoryFragment"
-            app:destination="@id/workoutHistoryFragment" />
+            app:destination="@id/workoutHistoryFragment"
+            app:popUpTo="@id/workoutFragment" />
     </fragment>
     <fragment
         android:id="@+id/workoutHistoryFragment"

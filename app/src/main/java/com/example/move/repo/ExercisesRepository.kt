@@ -33,4 +33,8 @@ class ExercisesRepository(
     suspend fun readBlocks()= db.getExerciseDao().readBlocks()
 
     suspend fun insertBlocks(data: Block) = db.getExerciseDao().insertBlocks(data = data)
+
+    suspend fun getBlocksByID(id: Int) = db.getExerciseDao().getBlocksWithID(id)
+
+    suspend fun getBlocksByExercise(exercise: ExerciseItem) = db.getExerciseDao().getBlocksWithExercises(exercise)
 }
