@@ -1,15 +1,18 @@
 package com.example.move.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.example.move.databinding.FragmentExerciseInfoBinding
+import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.move.adapters.ExerciseHistoryAdapter
+import com.example.move.adapters.HeaderAdapter
+import com.example.move.databinding.ExerciseInfoRecyclerviewBinding
+import com.example.move.models.ExerciseItem
 import com.example.move.ui.MainActivity
 import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,20 +21,21 @@ import kotlinx.coroutines.launch
 
 class ExerciseInfoFragment : Fragment() {
 
-    private var _binding: FragmentExerciseInfoBinding? = null
+    private var _binding: ExerciseInfoRecyclerviewBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var viewModel: WorkoutHistoryViewModel
+    private lateinit var viewModel: WorkoutHistoryViewModel
 
     private val args: ExerciseInfoFragmentArgs by navArgs()
+
+    lateinit var exerciseHistoryAdapter: ExerciseHistoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-
-        _binding = FragmentExerciseInfoBinding.inflate(inflater, container, false)
+        _binding = ExerciseInfoRecyclerviewBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -42,28 +46,23 @@ class ExerciseInfoFragment : Fragment() {
 
         val exercise = args.exercise
 
+        setupAdapter(exercise)
+
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.getExerciseHistory(exercise)
         }
 
         viewModel.historyOfExercise.observe(viewLifecycleOwner) { listOfExercise ->
-            val check = listOfExercise.joinToString(separator = "\n") { it.listOfSets.toString() }
-
-            Log.d("check", listOfExercise.joinToString { it.exercise.toString() })
-
-            binding.historyOfExercise.text = check
+            exerciseHistoryAdapter.differ.submitList(listOfExercise.reversed())
         }
+    }
 
-        binding.apply {
-            Glide.with(requireActivity())
-                .asGif()
-                .centerCrop()
-                .load(exercise.gifUrl)
-                .into(ivExerciseGif)
+    private fun setupAdapter(exercise: ExerciseItem) {
+        exerciseHistoryAdapter = ExerciseHistoryAdapter()
 
-            tvBodypartEdit.text = exercise.bodyPart
-            tvTargetMuscleEdit.text = exercise.target
-            tvEquipmentEdit.text = exercise.equipment
+        binding.root.apply {
+            adapter = ConcatAdapter(HeaderAdapter(exercise), exerciseHistoryAdapter)
+            layoutManager = LinearLayoutManager(activity)
         }
     }
 
@@ -71,4 +70,6 @@ class ExerciseInfoFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }

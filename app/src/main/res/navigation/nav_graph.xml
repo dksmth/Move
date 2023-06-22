@@ -12,6 +12,7 @@
         <action
             android:id="@+id/action_exerciseListFragment_to_exerciseInfoFragment"
             app:destination="@id/exerciseInfoFragment"
+            app:enterAnim="@android:anim/fade_in"
             app:popUpTo="@id/exerciseListFragment"
             app:popUpToInclusive="false" />
         <action
@@ -22,7 +23,7 @@
         android:id="@+id/exerciseInfoFragment"
         android:name="com.example.move.ui.fragments.ExerciseInfoFragment"
         android:label="fragment_second"
-        tools:layout="@layout/fragment_exercise_info" >
+        tools:layout="@layout/exercise_info_recyclerview" >
         <argument
             android:name="exercise"
             app:argType="com.example.move.models.ExerciseItem" />

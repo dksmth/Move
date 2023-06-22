@@ -3,36 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ui.fragments.ExerciseInfoFragment">
 
     <ImageView
         android:id="@+id/ivExerciseGif"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="#FFFFFF"
+        android:backgroundTint="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars" />
+        tools:src="@tools:sample/avatars"
+        android:contentDescription="@string/gif_description" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3" />
+        app:layout_constraintGuide_begin="250dp" />
 
     <TextView
         android:id="@+id/tvBodypart"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
         android:text="@string/bodypart"
         android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTargetMuscle"
         app:layout_constraintEnd_toStartOf="@+id/tvTargetMuscle"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintHorizontal_weight="0.3"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,9 +47,11 @@
         android:id="@+id/tvEquipment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
         android:text="@string/equipment"
         android:textAlignment="center"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="0.3"
@@ -54,10 +61,12 @@
     <TextView
         android:id="@+id/tvTargetMuscle"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
         android:text="@string/targetMuscle"
-        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tvEquipment"
         app:layout_constraintEnd_toStartOf="@+id/tvEquipment"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="0.3"
@@ -65,40 +74,65 @@
         app:layout_constraintTop_toBottomOf="@+id/ivExerciseGif" />
 
     <TextView
-        android:id="@+id/tvBodypartEdit"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvBodypartHere"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="@+id/tvBodypart"
-        app:layout_constraintStart_toStartOf="@+id/tvBodypart"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/tvMuscleHere"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBodypart" />
 
     <TextView
-        android:id="@+id/tvTargetMuscleEdit"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvMuscleHere"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="@+id/tvTargetMuscle"
-        app:layout_constraintStart_toStartOf="@+id/tvTargetMuscle"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/tvEquipmentHere"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvBodypartHere"
         app:layout_constraintTop_toBottomOf="@+id/tvTargetMuscle" />
 
     <TextView
-        android:id="@+id/tvEquipmentEdit"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvEquipmentHere"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="@+id/tvEquipment"
-        app:layout_constraintStart_toStartOf="@+id/tvEquipment"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tvMuscleHere"
         app:layout_constraintTop_toBottomOf="@+id/tvEquipment" />
 
     <TextView
-        android:id="@+id/historyOfExercise"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvInstructions"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="10dp"
+        android:padding="6dp"
+        android:text="@string/instructions_lorem_ipsum"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvInstructionLabel" />
+
+    <TextView
+        android:id="@+id/tvInstructionLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:includeFontPadding="false"
+        android:padding="5dp"
+        android:text="@string/instructions_label"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTargetMuscleEdit" />
+        app:layout_constraintTop_toBottomOf="@+id/tvBodypartHere" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
