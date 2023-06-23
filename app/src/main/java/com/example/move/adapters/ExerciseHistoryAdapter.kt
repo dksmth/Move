@@ -7,16 +7,31 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.move.databinding.ExerciseHistoryItemBinding
 import com.example.move.models.Block
+import com.example.move.util.parseWeight
+import com.example.move.util.roundToDecimal
+import com.example.move.util.trimLastIf
 import kotlin.math.roundToInt
 
 class ExerciseHistoryAdapter :
     RecyclerView.Adapter<ExerciseHistoryAdapter.ExerciseHistoryViewHolder>() {
 
+    lateinit var dateTime: List<String>
+
     inner class ExerciseHistoryViewHolder(binding: ExerciseHistoryItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val date = binding.tvDate
-        val sets = binding.tvSets
-        val oneRmValues = binding.tvOneRmValues
+        private val date = binding.tvDate
+        private val sets = binding.tvSets
+        private val oneRmValues = binding.tvOneRmValues
+
+        fun bind(block: Block, position: Int) {
+            if (dateTime.isNotEmpty()) date.text = dateTime[position]
+
+            sets.text =
+                block.listOfSets.joinToString("\n") { "${it.weight.parseWeight()} kg x ${it.reps}" }
+
+            oneRmValues.text =
+                block.listOfSets.joinToString("\n") { it.oneRepMax.roundToInt().toString() }
+        }
     }
 
     private val differCallback = object : DiffUtil.ItemCallback<Block>() {
@@ -45,21 +60,8 @@ class ExerciseHistoryAdapter :
     }
 
     override fun onBindViewHolder(holder: ExerciseHistoryViewHolder, position: Int) {
-        val item = differ.currentList[position]
-
-        holder.apply {
-            date.textSize = 18F
-            date.text = "Monday"
-            sets.text =
-                item.listOfSets.joinToString(separator = "\n") { "${it.weight} x ${it.reps}" }
-
-            oneRmValues.text = item.listOfSets.joinToString(separator = "\n") {
-                it.oneRepMax.roundToInt().toString()
-            }
-        }
+        holder.bind(differ.currentList[position], position)
     }
 
     override fun getItemCount(): Int = differ.currentList.size
-
-
 }

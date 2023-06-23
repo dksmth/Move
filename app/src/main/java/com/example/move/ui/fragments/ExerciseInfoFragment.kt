@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,13 +56,21 @@ class ExerciseInfoFragment : Fragment() {
         viewModel.historyOfExercise.observe(viewLifecycleOwner) { listOfExercise ->
             exerciseHistoryAdapter.differ.submitList(listOfExercise.reversed())
         }
+
+        viewModel.listOfDateTime.observe(viewLifecycleOwner) { dates ->
+            exerciseHistoryAdapter.dateTime = dates
+        }
     }
 
     private fun setupAdapter(exercise: ExerciseItem) {
         exerciseHistoryAdapter = ExerciseHistoryAdapter()
 
         binding.root.apply {
-            adapter = ConcatAdapter(HeaderAdapter(exercise), exerciseHistoryAdapter)
+            adapter = ConcatAdapter(HeaderAdapter(exercise).apply {
+                navigateBack = {
+                    navigateBack()
+                }
+            }, exerciseHistoryAdapter)
             layoutManager = LinearLayoutManager(activity)
         }
     }
@@ -71,5 +80,8 @@ class ExerciseInfoFragment : Fragment() {
         _binding = null
     }
 
+    private fun navigateBack() {
+        findNavController().popBackStack()
+    }
 
 }

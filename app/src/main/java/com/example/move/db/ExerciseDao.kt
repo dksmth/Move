@@ -17,6 +17,7 @@ interface ExerciseDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertWorkout(workout: Workout): Long
 
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(exerciseList: List<ExerciseItem>)
 
@@ -46,4 +47,7 @@ interface ExerciseDao {
 
     @Query("SELECT * FROM blocks where exercise = :exercise")
     suspend fun getBlocksWithExercises(exercise: ExerciseItem): List<Block>
+
+    @Query("SELECT * FROM workouts WHERE workout_id in (:ids)")
+    suspend fun getWorkoutByIDs(ids: List<Int>): List<Workout>
 }

@@ -10,11 +10,11 @@ class ExercisesRepository(
     val db: ExerciseDatabase
 ) {
 
-    suspend fun getExercises() = RetrofitInstance.api.getAllExercises()
+    suspend fun getExercisesFromApi() = RetrofitInstance.api.getAllExercises()
 
     suspend fun upsert(exercise: ExerciseItem) = db.getExerciseDao().upsert(exercise = exercise)
 
-    suspend fun upsertAll(exerciseList: List<ExerciseItem>) = db.getExerciseDao().upsertAll(exerciseList = exerciseList)
+    suspend fun upsertAllExercises(exerciseList: List<ExerciseItem>) = db.getExerciseDao().upsertAll(exerciseList = exerciseList)
 
     suspend fun upsert(workout: Workout) = db.getExerciseDao().upsertWorkout(workout = workout)
 
@@ -22,7 +22,7 @@ class ExercisesRepository(
 
     suspend fun cacheExists(): Boolean = db.getExerciseDao().exists()
 
-    suspend fun deleteAll() = db.getExerciseDao().deleteAllExercises()
+    suspend fun deleteAllExercises() = db.getExerciseDao().deleteAllExercises()
 
     suspend fun getAllWorkouts() = db.getExerciseDao().getAllWorkouts()
 
@@ -37,4 +37,6 @@ class ExercisesRepository(
     suspend fun getBlocksByID(id: Int) = db.getExerciseDao().getBlocksWithID(id)
 
     suspend fun getBlocksByExercise(exercise: ExerciseItem) = db.getExerciseDao().getBlocksWithExercises(exercise)
+
+    suspend fun getWorkoutsByIDs(ids: List<Int>) = db.getExerciseDao().getWorkoutByIDs(ids)
 }

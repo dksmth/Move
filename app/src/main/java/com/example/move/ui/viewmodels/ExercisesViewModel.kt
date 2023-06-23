@@ -9,54 +9,29 @@ import com.example.move.util.Resource
 import com.example.move.util.capitalized
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) : ViewModel() {
 
     val exercises: MutableLiveData<Resource<List<ExerciseItem>>> = MutableLiveData()
 
-    init {
-        viewModelScope.launch {
-            if (exercisesRepository.cacheExists()) {
-                getExercisesFromDb()
-            } else {
-                getExercises()
+
+    fun getExercisesFromDb() {
+        if (exercises.value?.data == null) {
+
+            viewModelScope.launch(context = Dispatchers.IO) {
+
+                exercises.postValue(Resource.Loading())
+                val response = exercisesRepository.getSavedExercises()
+
+                exercises.postValue(Resource.Success(changeNames(response)))
             }
         }
     }
 
-    private fun getExercises() {
-        viewModelScope.launch(context = Dispatchers.IO) {
-
-            exercises.postValue(Resource.Loading())
-            val response = exercisesRepository.getExercises()
-
-            val resource = handleResponse(response)
-
-            resource.apply {
-                data?.map {
-                    it.name = parseNames(it.name)
-                }
-            }
-
-            exercises.postValue(resource)
-        }
-    }
-
-    private fun getExercisesFromDb() {
-        viewModelScope.launch(context = Dispatchers.IO) {
-
-            exercises.postValue(Resource.Loading())
-            val response = exercisesRepository.getSavedExercises()
-
-            response.let { list ->
-                list.map { exercise ->
-                    exercise.apply {
-                        exercise.name = parseNames(exercise.name)
-                    }
-                }
-
-                exercises.postValue(Resource.Success(list))
+    private fun changeNames(list: List<ExerciseItem>): List<ExerciseItem> {
+        return list.map { exercise ->
+            exercise.apply {
+                exercise.name = parseNames(exercise.name)
             }
         }
     }
@@ -68,13 +43,4 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) :
     fun filter(str: String): List<ExerciseItem> =
         exercises.value?.data?.filter { it.name.lowercase().contains(str.lowercase()) }!!
 
-
-    private fun handleResponse(response: Response<List<ExerciseItem>>): Resource<List<ExerciseItem>> {
-        if (response.isSuccessful) {
-            response.body()?.let {
-                return Resource.Success(it)
-            }
-        }
-        return Resource.Error(response.message())
-    }
 }
