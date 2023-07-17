@@ -20,10 +20,9 @@ class WorkoutHistoryFragment : Fragment() {
     private var _binding: FragmentItemListBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var viewModel: WorkoutHistoryViewModel
+    private lateinit var viewModel: WorkoutHistoryViewModel
 
-    lateinit var workoutsAdapter: WorkoutHistoryAdapter
-
+    private lateinit var workoutsAdapter: WorkoutHistoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,7 +54,7 @@ class WorkoutHistoryFragment : Fragment() {
         }
 
         viewModel.mapWorkoutToBlocks.observe(viewLifecycleOwner) { map ->
-            workoutsAdapter.differ.submitList(map.keys.toList().reversed())
+            workoutsAdapter.differ.submitList(map)
         }
     }
 }

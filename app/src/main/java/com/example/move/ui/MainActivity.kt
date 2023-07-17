@@ -1,20 +1,15 @@
 package com.example.move.ui
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.NavigationUiSaveStateControl
 import com.example.move.R
 import com.example.move.databinding.ActivityMainBinding
 import com.example.move.db.ExerciseDatabase
@@ -25,8 +20,6 @@ import com.example.move.ui.viewmodels.ExercisesViewModel
 import com.example.move.ui.viewmodels.ExercisesViewModelProvideFactory
 import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
 import com.example.move.ui.viewmodels.WorkoutHistoryViewModelProvideFactory
-import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -36,9 +29,6 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var repository: ExercisesRepository
 
-    lateinit var sharedPref: SharedPreferences
-
-    val saveRequest = PeriodicWorkRequestBuilder<UploadWorker>(12, TimeUnit.HOURS).build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +37,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupBottomNavigation()
-
-        sharedPref = this.getPreferences(Context.MODE_PRIVATE)
 
         repository = ExercisesRepository(ExerciseDatabase(this))
 
@@ -60,19 +48,18 @@ class MainActivity : AppCompatActivity() {
 
         workoutHistoryViewModel =
             ViewModelProvider(this, otherFactory)[WorkoutHistoryViewModel::class.java]
-
-        if (!apiCallSaved()) {
-            populateDatabase(repository)
-        }
-
-        // changeBottomNavigationVisibilityDependingOnFragment()
     }
 
+    @OptIn(NavigationUiSaveStateControl::class)
     private fun setupBottomNavigation() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.exerciseNavHostFragment) as NavHostFragment
 
-        binding.bottomNavigationView.setupWithNavController(navHostFragment.findNavController())
+        val navView = binding.bottomNavigationView
+
+        NavigationUI.setupWithNavController(navView, navHostFragment.findNavController(), false)
+
+        //.setupWithNavController(navHostFragment.findNavController())
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(object :
             FragmentManager.FragmentLifecycleCallbacks() {
@@ -92,35 +79,4 @@ class MainActivity : AppCompatActivity() {
         }, true)
     }
 
-    private fun apiCallSaved(): Boolean = sharedPref.getBoolean(isApiCallSaved, false)
-
-//    private fun changeBottomNavigationVisibilityDependingOnFragment() {
-//
-//    }
-
-    private fun populateDatabase(repository: ExercisesRepository) {
-        lifecycleScope.launch {
-            repository.deleteAllExercises()
-            val response = repository.getExercisesFromApi()
-
-            response.body()?.let {
-                repository.upsertAllExercises(it)
-            }
-        }
-
-        sharedPref.edit().putBoolean(isApiCallSaved, true).apply()
-    }
-
-    inner class UploadWorker(appContext: Context, workerParams: WorkerParameters) :
-        Worker(appContext, workerParams) {
-        override fun doWork(): Result {
-            populateDatabase(repository)
-
-            return Result.success()
-        }
-    }
-
-    companion object {
-        const val isApiCallSaved = "apiCallSaved"
-    }
 }

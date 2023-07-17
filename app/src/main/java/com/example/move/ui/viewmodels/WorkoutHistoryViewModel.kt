@@ -1,36 +1,36 @@
 package com.example.move.ui.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.move.models.Block
+import com.example.move.models.BlocksWithDateTime
 import com.example.move.models.ExerciseItem
-import com.example.move.models.Workout
 import com.example.move.repo.ExercisesRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class WorkoutHistoryViewModel(private val exercisesRepository: ExercisesRepository) : ViewModel() {
 
-    val mapWorkoutToBlocks: MutableLiveData<Map<Workout, List<Block>>> = MutableLiveData()
+    val mapWorkoutToBlocks: MutableLiveData<List<BlocksWithDateTime>> = MutableLiveData()
 
     val historyOfExercise: MutableLiveData<List<Block>> = MutableLiveData()
 
-    val listOfDateTime: MutableLiveData<List<String>> = MutableLiveData()
+    fun getAllWorkouts() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val workoutsWithBlocks = exercisesRepository.getWorkoutsWithBlocks()
+            val blocksWithDateTimes = workoutsWithBlocks.map { BlocksWithDateTime(it.workout.dateTime, it.blocks) }
 
-    suspend fun getAllWorkouts() {
-        val map = exercisesRepository.readBlocks()
-
-        mapWorkoutToBlocks.postValue(map)
+            mapWorkoutToBlocks.postValue(blocksWithDateTimes.reversed())
+        }
     }
 
-    suspend fun getExerciseHistory(exerciseItem: ExerciseItem) {
-        val listOfExerciseBlocks = exercisesRepository.getBlocksByExercise(exerciseItem)
+    fun getExerciseHistory(exerciseItem: ExerciseItem) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val listOfExerciseBlocks = exercisesRepository.getBlocksByExercise(exerciseItem)
 
-        val datesForExerciseInfo = exercisesRepository.
-            getWorkoutsByIDs(listOfExerciseBlocks.map { it.workout_id!! }).map { it.dateTime }.reversed()
-
-        listOfDateTime.postValue(datesForExerciseInfo)
-
-        historyOfExercise.postValue(listOfExerciseBlocks)
+            historyOfExercise.postValue(listOfExerciseBlocks.reversed())
+        }
     }
 
 }

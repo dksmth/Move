@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ConcatAdapter
@@ -16,8 +15,6 @@ import com.example.move.databinding.ExerciseInfoRecyclerviewBinding
 import com.example.move.models.ExerciseItem
 import com.example.move.ui.MainActivity
 import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 class ExerciseInfoFragment : Fragment() {
@@ -49,16 +46,10 @@ class ExerciseInfoFragment : Fragment() {
 
         setupAdapter(exercise)
 
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.getExerciseHistory(exercise)
-        }
+        viewModel.getExerciseHistory(exercise)
 
         viewModel.historyOfExercise.observe(viewLifecycleOwner) { listOfExercise ->
-            exerciseHistoryAdapter.differ.submitList(listOfExercise.reversed())
-        }
-
-        viewModel.listOfDateTime.observe(viewLifecycleOwner) { dates ->
-            exerciseHistoryAdapter.dateTime = dates
+            exerciseHistoryAdapter.differ.submitList(listOfExercise)
         }
     }
 

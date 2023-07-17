@@ -6,19 +6,16 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(
-    tableName = "blocks",
-
-)
+@Entity(tableName = "blocks")
 data class Block(
     @PrimaryKey(autoGenerate = true)
     val block_id: Int? = null,
-    var exercise: ExerciseItem? = null,
+    var exercise: ExerciseItem,
     var listOfSets: MutableList<OneSet> = mutableListOf(OneSet(0.0, 0)),
     val comment: String? = null,
-    var workout_id: Int? = null
+    var dateTime: String
 ) : Parcelable {
     override fun toString(): String {
-        return this.exercise?.name.toString() + " :" + listOfSets.joinToString(separator = ",")
+        return this.exercise.name + " :" + listOfSets.joinToString(separator = ",")
     }
 }

@@ -14,26 +14,21 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) :
 
     val exercises: MutableLiveData<Resource<List<ExerciseItem>>> = MutableLiveData()
 
+    init {
+        getExercisesFromDb()
+    }
 
-    fun getExercisesFromDb() {
-        if (exercises.value?.data == null) {
+    private fun getExercisesFromDb() {
+        viewModelScope.launch(Dispatchers.IO) {
+            exercises.postValue(Resource.Loading())
+            val response = exercisesRepository.getExercisesFromApiOrDb()
 
-            viewModelScope.launch(context = Dispatchers.IO) {
-
-                exercises.postValue(Resource.Loading())
-                val response = exercisesRepository.getSavedExercises()
-
-                exercises.postValue(Resource.Success(changeNames(response)))
-            }
+            exercises.postValue(Resource.Success(changeNames(response)))
         }
     }
 
     private fun changeNames(list: List<ExerciseItem>): List<ExerciseItem> {
-        return list.map { exercise ->
-            exercise.apply {
-                exercise.name = parseNames(exercise.name)
-            }
-        }
+        return list.map { exercise -> exercise.apply { exercise.name = parseNames(exercise.name) } }
     }
 
     private fun parseNames(str: String): String {
@@ -42,5 +37,4 @@ class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) :
 
     fun filter(str: String): List<ExerciseItem> =
         exercises.value?.data?.filter { it.name.lowercase().contains(str.lowercase()) }!!
-
 }

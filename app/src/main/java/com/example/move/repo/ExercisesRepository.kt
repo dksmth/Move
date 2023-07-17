@@ -5,16 +5,29 @@ import com.example.move.db.ExerciseDatabase
 import com.example.move.models.Block
 import com.example.move.models.ExerciseItem
 import com.example.move.models.Workout
+import com.example.move.models.WorkoutWithBlocks
 
 class ExercisesRepository(
-    val db: ExerciseDatabase
+    private val db: ExerciseDatabase,
 ) {
+    fun getWorkoutsWithBlocks(): List<WorkoutWithBlocks> =
+        db.getExerciseDao().getWorkoutsWithBlocks()
 
-    suspend fun getExercisesFromApi() = RetrofitInstance.api.getAllExercises()
+    suspend fun getExercisesFromApiOrDb(): List<ExerciseItem> {
+        return if (db.getExerciseDao().exists()) {
+            getSavedExercises()
+        } else {
+            val responseFromApi = getExercisesFromApi().body()!!
+            upsertAllExercises(responseFromApi)
 
-    suspend fun upsert(exercise: ExerciseItem) = db.getExerciseDao().upsert(exercise = exercise)
+            responseFromApi
+        }
+    }
 
-    suspend fun upsertAllExercises(exerciseList: List<ExerciseItem>) = db.getExerciseDao().upsertAll(exerciseList = exerciseList)
+    private suspend fun getExercisesFromApi() = RetrofitInstance.api.getAllExercises()
+
+    private suspend fun upsertAllExercises(exerciseList: List<ExerciseItem>) =
+        db.getExerciseDao().upsertAll(exerciseList = exerciseList)
 
     suspend fun upsert(workout: Workout) = db.getExerciseDao().upsertWorkout(workout = workout)
 
@@ -30,13 +43,14 @@ class ExercisesRepository(
 
     suspend fun deleteAllWorkouts() = db.getExerciseDao().deleteAllWorkouts()
 
-    suspend fun readBlocks()= db.getExerciseDao().readBlocks()
+    // suspend fun readBlocks()= db.getExerciseDao().readBlocks()
 
-    suspend fun insertBlocks(data: Block) = db.getExerciseDao().insertBlocks(data = data)
+    suspend fun insertBlocks(data: Block) = db.getExerciseDao().insertBlock(data = data)
 
     suspend fun getBlocksByID(id: Int) = db.getExerciseDao().getBlocksWithID(id)
 
-    suspend fun getBlocksByExercise(exercise: ExerciseItem) = db.getExerciseDao().getBlocksWithExercises(exercise)
+    suspend fun getBlocksByExercise(exercise: ExerciseItem) =
+        db.getExerciseDao().getBlocksWithExercises(exercise)
 
     suspend fun getWorkoutsByIDs(ids: List<Int>) = db.getExerciseDao().getWorkoutByIDs(ids)
 }

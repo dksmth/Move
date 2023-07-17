@@ -9,29 +9,33 @@ import com.example.move.models.Block
 import com.example.move.models.ExerciseItem
 import com.example.move.models.OneSet
 import com.example.move.models.Workout
+import com.example.move.models.WorkoutBlockCrossRef
 import com.example.move.util.onlyFirstCharCapitalized
 import java.time.LocalDate
 
 class WorkoutViewModel(application: Application) : AndroidViewModel(application) {
 
-    var workout: MutableLiveData<List<Block>> = MutableLiveData(listOf())
+    var _workout: MutableLiveData<List<Block>> = MutableLiveData(listOf())
+    val workout: List<Block>?
+        get() = _workout.value
 
     private var dao: ExerciseDao = ExerciseDatabase(application).getExerciseDao()
 
     var openedForResult = false
 
     fun addExercise(exercise: ExerciseItem) {
-        workout.value = workout.value?.plus(Block(exercise = exercise))
+        val time = getWeekdayAndDate()
+        _workout.value = _workout.value?.plus(Block(exercise = exercise, dateTime = time))
 
         setFlagForOpeningWithResult(false)
     }
 
     fun deleteExercise(block: Block) {
-        workout.value = workout.value?.minus(block)
+        _workout.value = _workout.value?.minus(block)
     }
 
     fun addSet(block: Block) {
-        val chosenBlock = workout.value?.find { it == block }
+        val chosenBlock = _workout.value?.find { it == block }
 
         chosenBlock!!.listOfSets = (chosenBlock.listOfSets + OneSet(0.0, 0)) as MutableList<OneSet>
     }
@@ -41,7 +45,6 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun changeSet(block: Block, strings: List<String>) {
-
         val (value, position, type) = strings
 
         var returnedNumber = 0.0
@@ -53,7 +56,7 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
             }
         }
 
-        val chosenBlock = workout.value?.find { it == block }
+        val chosenBlock = _workout.value?.find { it == block }
 
         if (type == "weight") {
             chosenBlock!!.listOfSets[position.toInt()].weight = returnedNumber
@@ -63,35 +66,32 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun deleteSet(block: Block, position: Int) {
-        val chosenBlock = workout.value?.find { it == block }
+        val chosenBlock = _workout.value?.find { it == block }
 
         chosenBlock!!.listOfSets.removeAt(position)
     }
 
     fun endWorkout() {
-        workout.value = listOf()
+        _workout.value = listOf()
     }
 
-    fun canBeFinished(): Boolean {
-        return workout.value?.isNotEmpty() ?: false
-    }
+    fun canBeFinished(): Boolean = workout?.isNotEmpty() ?: false
 
-    fun getWorkoutInfo(): String {
-        return workout.value.toString()
-    }
+    fun getWorkoutInfo(): String = workout.toString()
 
-    fun isInWorkout(exercise: ExerciseItem): Boolean =
-        workout.value?.any { it.exercise == exercise }!!
+    fun isInWorkout(exercise: ExerciseItem): Boolean = workout?.any { it.exercise == exercise }!!
 
     suspend fun insertWorkout() {
-        val check = workout.value
+        val blocksToSave = _workout.value
         val time = getWeekdayAndDate()
 
-        val workoutId = dao.upsertWorkout(workout = Workout(blocks = check, dateTime = time))
+        val workoutId = dao.upsertWorkout(workout = Workout(dateTime = time))
 
-        check?.forEach {
-            it.workout_id = workoutId.toInt()
-            dao.insertBlocks(it)
+        blocksToSave?.forEach {
+            val blockId = dao.insertBlock(it)
+            val newCrossRef = WorkoutBlockCrossRef(workout_id = workoutId, block_id = blockId)
+
+            dao.insertCrossReference(newCrossRef)
         }
     }
 

@@ -6,15 +6,11 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.move.databinding.CardsForWorkoutHistoryBinding
-import com.example.move.models.OneSet
-import com.example.move.models.Workout
-import com.example.move.util.roundToDecimal
-import com.example.move.util.trimLastIf
+import com.example.move.models.BlocksWithDateTime
 
 
-class WorkoutHistoryAdapter() :
+class WorkoutHistoryAdapter :
     RecyclerView.Adapter<WorkoutHistoryAdapter.ViewHolder>() {
-
 
     inner class ViewHolder(binding: CardsForWorkoutHistoryBinding) : RecyclerView.ViewHolder(binding.root) {
         val body = binding.workoutBody
@@ -22,12 +18,12 @@ class WorkoutHistoryAdapter() :
         val bestSet = binding.bestSetsColumn
     }
 
-    private val differCallback = object : DiffUtil.ItemCallback<Workout>() {
-        override fun areItemsTheSame(oldItem: Workout, newItem: Workout): Boolean {
-            return oldItem.workout_id == newItem.workout_id
+    private val differCallback = object : DiffUtil.ItemCallback<BlocksWithDateTime>() {
+        override fun areItemsTheSame(oldItem: BlocksWithDateTime, newItem: BlocksWithDateTime): Boolean {
+            return oldItem.dateTime == newItem.dateTime && oldItem.blocks == newItem.blocks
         }
 
-        override fun areContentsTheSame(oldItem: Workout, newItem: Workout): Boolean {
+        override fun areContentsTheSame(oldItem: BlocksWithDateTime, newItem: BlocksWithDateTime): Boolean {
             return oldItem == newItem
         }
     }
@@ -48,31 +44,20 @@ class WorkoutHistoryAdapter() :
         val item = differ.currentList[position]
 
         holder.apply {
-            var setsAndName = "\n"
-            var bestSetString = "\n"
+            var setsAndName = ""
+            var bestSetString = ""
 
-            item.blocks?.forEach { block ->
+            item.blocks.forEach { block ->
                 val bestSet = block.listOfSets.maxBy { it.oneRepMax }
 
                 bestSetString += "${bestSet.weight} x ${bestSet.reps}" + "\n"
-
-                setsAndName += block.listOfSets.size.toString() + " x " + block.exercise?.name + "\n"
+                setsAndName += "${block.listOfSets.size} x ${block.exercise.name} \n"
             }
 
-            body.text = setsAndName
-            bestSet.text = bestSetString
+            body.text = setsAndName.trim()
+            bestSet.text = bestSetString.trim()
             workoutName.text = item.dateTime
         }
-    }
-
-    private fun setsToString(blocks: List<OneSet>): String {
-        return blocks.joinToString(
-            separator = "\n",
-            transform = { set ->
-                "${set.weight} x ${set.reps}  ${
-                    set.oneRepMax.roundToDecimal(1).trimLastIf(",0")
-                }"
-            })
     }
 
     override fun getItemCount(): Int = differ.currentList.size

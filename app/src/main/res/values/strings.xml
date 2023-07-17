@@ -29,8 +29,12 @@
     <string name="workoutHistoryBottomNavigationLabel">Workout History</string>
     <string name="btDeleteExerciseContentDescription">Click this to remove exercise from workout</string>
     <string name="sets_done">Sets Done</string>
-    <string name="instructions_lorem_ipsum">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</string>
+    <string name="instructions_lorem_ipsum">"1) Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \n2) Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n3) Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</string>
     <string name="instructions_label">Instructions</string>
     <string name="gif_description">GIF showing how to perform this specific exercise</string>
     <string name="one_rep_max">1RM</string>
+    <string name="dateInWorkoutHistoryCard">Weekday, Month 3</string>
+    <string name="exerciseLabelInWorkoutHistory">Exercise</string>
+    <string name="setLabelWorkoutHistory">Best Set</string>
+    <string name="exerciseHistoryLabel">Exercise History</string>
 </resources>

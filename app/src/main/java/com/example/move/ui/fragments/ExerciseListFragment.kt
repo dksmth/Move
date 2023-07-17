@@ -53,8 +53,6 @@ class ExerciseListFragment : Fragment() {
 
         setupRecyclerView()
 
-        viewModel.getExercisesFromDb()
-
         exercisesAdapter.setOnItemClickListener { exercise ->
             if (workoutViewModel.openedForResult) {
 

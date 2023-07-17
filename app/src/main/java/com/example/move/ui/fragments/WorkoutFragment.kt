@@ -39,7 +39,7 @@ class WorkoutFragment : Fragment() {
 
         setupBlockAdapter()
 
-        viewModel.workout.observe(viewLifecycleOwner) { workout ->
+        viewModel._workout.observe(viewLifecycleOwner) { workout ->
             blockAdapter.differ.submitList(workout)
         }
 

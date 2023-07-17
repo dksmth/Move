@@ -16,14 +16,16 @@
             android:id="@+id/constraintLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            >
+            android:paddingHorizontal="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="5dp">
 
             <TextView
                 android:id="@+id/bestSetTab"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Best Set"
+                android:text="@string/setLabelWorkoutHistory"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@id/exerciseTab"
                 app:layout_constraintEnd_toEndOf="@id/constraintLayout"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -33,7 +35,11 @@
                 android:id="@+id/workoutBody"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:text="TextView"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/constraintLayout"
                 app:layout_constraintTop_toBottomOf="@id/exerciseTab" />
 
@@ -41,7 +47,7 @@
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView"
+                android:text="@string/dateInWorkoutHistoryCard"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@id/constraintLayout"
@@ -51,7 +57,9 @@
                 android:id="@+id/exerciseTab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Exercise"
+                android:layout_marginTop="16dp"
+                android:text="@string/exerciseLabelInWorkoutHistory"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@id/constraintLayout"
                 app:layout_constraintTop_toBottomOf="@id/tvDate" />
 
@@ -66,7 +74,9 @@
                 android:id="@+id/bestSetsColumn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="TextView"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="@id/constraintLayout"
                 app:layout_constraintStart_toStartOf="@+id/guideline3"
                 app:layout_constraintTop_toBottomOf="@+id/bestSetTab" />
