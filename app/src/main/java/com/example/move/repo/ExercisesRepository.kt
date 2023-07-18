@@ -1,56 +1,69 @@
 package com.example.move.repo
 
-import com.example.move.api.RetrofitInstance
-import com.example.move.db.ExerciseDatabase
+import com.example.move.data.remote.ExerciseAPI
+import com.example.move.data.local.ExerciseDatabase
 import com.example.move.models.Block
 import com.example.move.models.ExerciseItem
 import com.example.move.models.Workout
+import com.example.move.models.WorkoutBlockCrossRef
 import com.example.move.models.WorkoutWithBlocks
+import javax.inject.Inject
 
-class ExercisesRepository(
-    private val db: ExerciseDatabase,
+class ExercisesRepository @Inject constructor(
+    db: ExerciseDatabase,
+    private val api: ExerciseAPI,
 ) {
-    fun getWorkoutsWithBlocks(): List<WorkoutWithBlocks> =
-        db.getExerciseDao().getWorkoutsWithBlocks()
+    private val dao = db.dao
+
+    // Exercises
+
+    private suspend fun exercisesTableExists(): Boolean = dao.exists()
 
     suspend fun getExercisesFromApiOrDb(): List<ExerciseItem> {
-        return if (db.getExerciseDao().exists()) {
-            getSavedExercises()
-        } else {
+        return if (!exercisesTableExists()) {
             val responseFromApi = getExercisesFromApi().body()!!
-            upsertAllExercises(responseFromApi)
+            insertExercises(responseFromApi)
 
             responseFromApi
+        } else {
+            getSavedExercises()
         }
     }
 
-    private suspend fun getExercisesFromApi() = RetrofitInstance.api.getAllExercises()
+    private suspend fun getExercisesFromApi() = api.getAllExercises()
 
-    private suspend fun upsertAllExercises(exerciseList: List<ExerciseItem>) =
-        db.getExerciseDao().upsertAll(exerciseList = exerciseList)
+    private suspend fun insertExercises(exerciseList: List<ExerciseItem>) =
+        dao.upsertAll(exerciseList = exerciseList)
 
-    suspend fun upsert(workout: Workout) = db.getExerciseDao().upsertWorkout(workout = workout)
+    private suspend fun getSavedExercises() = dao.getAllExercises()
 
-    suspend fun getSavedExercises() = db.getExerciseDao().getAllExercises()
+    // Workout
 
-    suspend fun cacheExists(): Boolean = db.getExerciseDao().exists()
+    suspend fun insertWorkout(workout: Workout) = dao.upsertWorkout(workout = workout)
 
-    suspend fun deleteAllExercises() = db.getExerciseDao().deleteAllExercises()
+    // CrossReference
 
-    suspend fun getAllWorkouts() = db.getExerciseDao().getAllWorkouts()
+    suspend fun insertCrossReference(ref: WorkoutBlockCrossRef) = dao.insertCrossReference(ref)
 
-    suspend fun getLastWorkout() = db.getExerciseDao().getLastWorkout()
+    suspend fun getWorkoutsWithBlocks(): List<WorkoutWithBlocks> = dao.getWorkoutsWithBlocks()
 
-    suspend fun deleteAllWorkouts() = db.getExerciseDao().deleteAllWorkouts()
+    // Blocks
 
-    // suspend fun readBlocks()= db.getExerciseDao().readBlocks()
+    suspend fun insertBlocks(data: Block) = dao.insertBlock(data = data)
 
-    suspend fun insertBlocks(data: Block) = db.getExerciseDao().insertBlock(data = data)
+    suspend fun getBlocksByExercise(exercise: ExerciseItem) = dao.getBlocksWithExercises(exercise)
 
-    suspend fun getBlocksByID(id: Int) = db.getExerciseDao().getBlocksWithID(id)
+    // Misc
 
-    suspend fun getBlocksByExercise(exercise: ExerciseItem) =
-        db.getExerciseDao().getBlocksWithExercises(exercise)
-
-    suspend fun getWorkoutsByIDs(ids: List<Int>) = db.getExerciseDao().getWorkoutByIDs(ids)
+//    suspend fun deleteAllExercises() = dao.deleteAllExercises()
+//
+//    suspend fun getAllWorkouts() = dao.getAllWorkouts()
+//
+//    suspend fun getLastWorkout() = dao.getLastWorkout()
+//
+//    suspend fun deleteAllWorkouts() = dao.deleteAllWorkouts()
+//
+//    suspend fun getBlocksByID(id: Int) = dao.getBlocksWithID(id)
+//
+//    suspend fun getWorkoutsByIDs(ids: List<Int>) = dao.getWorkoutByIDs(ids)
 }

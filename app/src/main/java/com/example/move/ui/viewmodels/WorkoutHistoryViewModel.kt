@@ -7,10 +7,13 @@ import com.example.move.models.Block
 import com.example.move.models.BlocksWithDateTime
 import com.example.move.models.ExerciseItem
 import com.example.move.repo.ExercisesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class WorkoutHistoryViewModel(private val exercisesRepository: ExercisesRepository) : ViewModel() {
+@HiltViewModel
+class WorkoutHistoryViewModel @Inject constructor(private val exercisesRepository: ExercisesRepository) : ViewModel() {
 
     val mapWorkoutToBlocks: MutableLiveData<List<BlocksWithDateTime>> = MutableLiveData()
 

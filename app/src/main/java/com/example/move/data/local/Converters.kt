@@ -1,11 +1,10 @@
-package com.example.move.db
+package com.example.move.data.local
 
 import androidx.room.TypeConverter
 import com.example.move.models.Block
 import com.example.move.models.ExerciseItem
 import com.example.move.models.OneSet
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 
 
@@ -38,18 +37,18 @@ class Converters {
         return gson.fromJson(str, listType)
     }
 
-    @TypeConverter
-    fun fromBlockToString(list: List<Block>): String {
-        return gson.toJson(list)
-    }
-
-    @TypeConverter
-    fun fromStringToBlocks(str: String): List<Block> {
-
-        val listType = object : TypeToken<List<Block>>() {}.type
-
-        return gson.fromJson(str, listType)
-
-    }
+//    @TypeConverter
+//    fun fromBlockToString(list: List<Block>): String {
+//        return gson.toJson(list)
+//    }
+//
+//    @TypeConverter
+//    fun fromStringToBlocks(str: String): List<Block> {
+//
+//        val listType = object : TypeToken<List<Block>>() {}.type
+//
+//        return gson.fromJson(str, listType)
+//
+//    }
 
 }

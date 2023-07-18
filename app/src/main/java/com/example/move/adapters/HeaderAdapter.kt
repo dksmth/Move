@@ -9,7 +9,7 @@ import com.example.move.models.ExerciseItem
 
 class HeaderAdapter(val exercise: ExerciseItem): RecyclerView.Adapter<HeaderAdapter.HeaderViewHolder>() {
 
-    var navigateBack: ((Boolean) -> Unit)? = null
+    var navigateBack: () -> Boolean? = { false }
 
     inner class HeaderViewHolder(binding: HeaderWithAppBarBinding) : RecyclerView.ViewHolder(binding.root) {
         private val bodypart = binding.includedHeader.tvBodypartHere
@@ -45,7 +45,7 @@ class HeaderAdapter(val exercise: ExerciseItem): RecyclerView.Adapter<HeaderAdap
         holder.bind()
 
         holder.appBar.setNavigationOnClickListener {
-            navigateBack?.invoke(true)
+            navigateBack.invoke()
         }
     }
 

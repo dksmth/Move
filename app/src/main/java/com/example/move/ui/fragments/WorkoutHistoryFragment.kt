@@ -5,22 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.move.adapters.WorkoutHistoryAdapter
 import com.example.move.databinding.FragmentItemListBinding
-import com.example.move.ui.MainActivity
 import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class WorkoutHistoryFragment : Fragment() {
 
     private var _binding: FragmentItemListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: WorkoutHistoryViewModel
+    private val viewModel: WorkoutHistoryViewModel by viewModels()
 
     private lateinit var workoutsAdapter: WorkoutHistoryAdapter
 
@@ -46,8 +47,6 @@ class WorkoutHistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = (activity as MainActivity).workoutHistoryViewModel
 
         lifecycleScope.launch(Dispatchers.IO) {
             viewModel.getAllWorkouts()

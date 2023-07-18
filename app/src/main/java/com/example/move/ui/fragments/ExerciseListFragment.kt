@@ -8,33 +8,33 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.coroutineScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.move.adapters.ExercisesAdapter
 import com.example.move.databinding.FragmentExercisesBinding
 import com.example.move.models.ExerciseItem
-import com.example.move.ui.MainActivity
 import com.example.move.ui.viewmodels.ExercisesViewModel
 import com.example.move.ui.viewmodels.WorkoutViewModel
 import com.example.move.util.Resource
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class ExerciseListFragment : Fragment() {
 
     private var _binding: FragmentExercisesBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var viewModel: ExercisesViewModel
+    private val exercisesViewModel: ExercisesViewModel by viewModels()
 
-    private val workoutViewModel: WorkoutViewModel by lazy {
-        ViewModelProvider(requireActivity())[WorkoutViewModel::class.java]
-    }
+    private val workoutViewModel: WorkoutViewModel by activityViewModels()
+
 
     private lateinit var exercisesAdapter: ExercisesAdapter
 
@@ -49,8 +49,6 @@ class ExerciseListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = (activity as MainActivity).viewModel
-
         setupRecyclerView()
 
         exercisesAdapter.setOnItemClickListener { exercise ->
@@ -60,13 +58,14 @@ class ExerciseListFragment : Fragment() {
                     showToastForDuplicateExercise()
                 } else {
                     workoutViewModel.addExercise(exercise)
-
-                    navigateTo(WORKOUT, exercise)
+                    findNavController().popBackStack()
                 }
-            } else navigateTo(EXERCISE_INFO, exercise)
+            } else {
+                navigateToExerciseInfo(exercise)
+            }
         }
 
-        viewModel.exercises.observe(viewLifecycleOwner) { response ->
+        exercisesViewModel.exercises.observe(viewLifecycleOwner) { response ->
             handleResponse(response)
         }
 
@@ -105,9 +104,9 @@ class ExerciseListFragment : Fragment() {
     }
 
     private fun updateList(str: String) {
-        val filteredList = viewModel.filter(str)
+        val filteredList = exercisesViewModel.filter(str)
 
-        exercisesAdapter.differ.submitList(viewModel.filter(str))
+        exercisesAdapter.differ.submitList(exercisesViewModel.filter(str))
 
         if (filteredList.isEmpty()) {
             Toast.makeText(requireActivity(), "Nothing found", Toast.LENGTH_SHORT).show()
@@ -138,17 +137,11 @@ class ExerciseListFragment : Fragment() {
         }
     }
 
-    private fun navigateTo(destination: String, exercise: ExerciseItem) {
+    private fun navigateToExerciseInfo(exercise: ExerciseItem) {
         clearSearchView()
 
         findNavController().navigate(
-            with(ExerciseListFragmentDirections) {
-
-                when (destination) {
-                    WORKOUT -> actionExerciseListFragmentToWorkoutFragment()
-                    else -> actionExerciseListFragmentToExerciseInfoFragment(exercise)
-                }
-            }
+            ExerciseListFragmentDirections.actionExerciseListFragmentToExerciseInfoFragment(exercise)
         )
     }
 
@@ -177,10 +170,5 @@ class ExerciseListFragment : Fragment() {
             adapter = exercisesAdapter
             layoutManager = LinearLayoutManager(activity)
         }
-    }
-
-    companion object {
-        const val WORKOUT = "Workout"
-        const val EXERCISE_INFO = "Exercise info"
     }
 }

@@ -1,4 +1,4 @@
-package com.example.move.api
+package com.example.move.data.remote
 
 import com.example.move.models.ExerciseItem
 import retrofit2.Response

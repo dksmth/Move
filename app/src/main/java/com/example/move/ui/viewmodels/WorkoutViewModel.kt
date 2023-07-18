@@ -1,25 +1,24 @@
 package com.example.move.ui.viewmodels
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.example.move.db.ExerciseDao
-import com.example.move.db.ExerciseDatabase
+import androidx.lifecycle.ViewModel
 import com.example.move.models.Block
 import com.example.move.models.ExerciseItem
 import com.example.move.models.OneSet
 import com.example.move.models.Workout
 import com.example.move.models.WorkoutBlockCrossRef
+import com.example.move.repo.ExercisesRepository
 import com.example.move.util.onlyFirstCharCapitalized
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
+import javax.inject.Inject
 
-class WorkoutViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class WorkoutViewModel @Inject constructor(private val exercisesRepository: ExercisesRepository) : ViewModel() {
 
     var _workout: MutableLiveData<List<Block>> = MutableLiveData(listOf())
     val workout: List<Block>?
         get() = _workout.value
-
-    private var dao: ExerciseDao = ExerciseDatabase(application).getExerciseDao()
 
     var openedForResult = false
 
@@ -85,13 +84,13 @@ class WorkoutViewModel(application: Application) : AndroidViewModel(application)
         val blocksToSave = _workout.value
         val time = getWeekdayAndDate()
 
-        val workoutId = dao.upsertWorkout(workout = Workout(dateTime = time))
+        val workoutId = exercisesRepository.insertWorkout(Workout(dateTime = time))
 
         blocksToSave?.forEach {
-            val blockId = dao.insertBlock(it)
+            val blockId = exercisesRepository.insertBlocks(it)
             val newCrossRef = WorkoutBlockCrossRef(workout_id = workoutId, block_id = blockId)
 
-            dao.insertCrossReference(newCrossRef)
+            exercisesRepository.insertCrossReference(newCrossRef)
         }
     }
 

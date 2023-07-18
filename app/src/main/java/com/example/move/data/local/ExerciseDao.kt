@@ -1,4 +1,4 @@
-package com.example.move.db
+package com.example.move.data.local
 
 import androidx.room.*
 import com.example.move.models.Block

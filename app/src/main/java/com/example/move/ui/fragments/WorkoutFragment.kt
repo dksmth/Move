@@ -5,20 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.move.adapters.BlockAdapter
 import com.example.move.databinding.FragmentWorkoutBinding
 import com.example.move.ui.viewmodels.WorkoutViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class WorkoutFragment : Fragment() {
 
-    private val viewModel: WorkoutViewModel by lazy {
-        ViewModelProvider(requireActivity())[WorkoutViewModel::class.java]
-    }
+    private val workoutViewModel: WorkoutViewModel by activityViewModels()
 
     lateinit var blockAdapter: BlockAdapter
 
@@ -39,21 +39,21 @@ class WorkoutFragment : Fragment() {
 
         setupBlockAdapter()
 
-        viewModel._workout.observe(viewLifecycleOwner) { workout ->
+        workoutViewModel._workout.observe(viewLifecycleOwner) { workout ->
             blockAdapter.differ.submitList(workout)
         }
 
         blockAdapter.addSetListener = { block ->
-            viewModel.addSet(block)
+            workoutViewModel.addSet(block)
             blockAdapter.notifyItemChanged(blockAdapter.differ.currentList.indexOf(block))
         }
 
         blockAdapter.deleteExerciseListener = {
-            viewModel.deleteExercise(it)
+            workoutViewModel.deleteExercise(it)
         }
 
         binding.btAddExercise.setOnClickListener {
-            viewModel.setFlagForOpeningWithResult(true)
+            workoutViewModel.setFlagForOpeningWithResult(true)
             navigateToExerciseList()
         }
 
@@ -62,24 +62,24 @@ class WorkoutFragment : Fragment() {
         }
 
         blockAdapter.changeSetListener  = { block, strings ->
-            viewModel.changeSet(block, strings)
+            workoutViewModel.changeSet(block, strings)
         }
 
         blockAdapter.deleteSetListener = { block, i ->
-            viewModel.deleteSet(block, i)
+            workoutViewModel.deleteSet(block, i)
             blockAdapter.notifyItemChanged(blockAdapter.differ.currentList.indexOf(block))
         }
     }
 
     private fun endWorkout() {
-        if (viewModel.canBeFinished()) {
+        if (workoutViewModel.canBeFinished()) {
             lifecycleScope.launch {
-                viewModel.insertWorkout()
+                workoutViewModel.insertWorkout()
             }
 
-            val workoutInfo = viewModel.getWorkoutInfo()
+            val workoutInfo = workoutViewModel.getWorkoutInfo()
 
-            viewModel.endWorkout()
+            workoutViewModel.endWorkout()
             navigateToEndScreen(workoutInfo)
         }
     }

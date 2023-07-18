@@ -37,6 +37,9 @@ class WorkoutFinishedFragment : Fragment() {
 
 
     private fun navigateToWorkoutHistory() {
+
+        // findNavController().popBackStack()
+
         findNavController().navigate(
             WorkoutFinishedFragmentDirections.actionWorkoutFinishedFragmentToWorkoutHistoryFragment()
         )

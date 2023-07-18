@@ -7,10 +7,13 @@ import com.example.move.models.ExerciseItem
 import com.example.move.repo.ExercisesRepository
 import com.example.move.util.Resource
 import com.example.move.util.capitalized
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ExercisesViewModel(private val exercisesRepository: ExercisesRepository) : ViewModel() {
+@HiltViewModel
+class ExercisesViewModel @Inject constructor(private val exercisesRepository: ExercisesRepository) : ViewModel() {
 
     val exercises: MutableLiveData<Resource<List<ExerciseItem>>> = MutableLiveData()
 
