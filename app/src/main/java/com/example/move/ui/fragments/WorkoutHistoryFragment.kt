@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.move.adapters.WorkoutHistoryAdapter
-import com.example.move.databinding.FragmentItemListBinding
+import com.example.move.databinding.FragmentWorkoutHistoryBinding
 import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class WorkoutHistoryFragment : Fragment() {
 
-    private var _binding: FragmentItemListBinding? = null
+    private var _binding: FragmentWorkoutHistoryBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: WorkoutHistoryViewModel by viewModels()
@@ -29,7 +29,7 @@ class WorkoutHistoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentItemListBinding.inflate(inflater, container, false)
+        _binding = FragmentWorkoutHistoryBinding.inflate(inflater, container, false)
 
         setupBlockAdapter()
 

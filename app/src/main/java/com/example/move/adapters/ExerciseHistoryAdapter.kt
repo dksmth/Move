@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.move.databinding.ExerciseHistoryItemBinding
+import com.example.move.databinding.ExerciseInfoRvItemBinding
 import com.example.move.models.Block
 import com.example.move.util.parseWeight
 import kotlin.math.roundToInt
@@ -13,7 +13,7 @@ import kotlin.math.roundToInt
 class ExerciseHistoryAdapter :
     RecyclerView.Adapter<ExerciseHistoryAdapter.ExerciseHistoryViewHolder>() {
 
-    inner class ExerciseHistoryViewHolder(binding: ExerciseHistoryItemBinding) :
+    inner class ExerciseHistoryViewHolder(binding: ExerciseInfoRvItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val date = binding.tvDate
         private val sets = binding.tvSets
@@ -47,7 +47,7 @@ class ExerciseHistoryAdapter :
         viewType: Int,
     ): ExerciseHistoryViewHolder {
         return ExerciseHistoryViewHolder(
-            ExerciseHistoryItemBinding.inflate(
+            ExerciseInfoRvItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -56,7 +56,9 @@ class ExerciseHistoryAdapter :
     }
 
     override fun onBindViewHolder(holder: ExerciseHistoryViewHolder, position: Int) {
-        holder.bind(differ.currentList[position])
+        val sets = differ.currentList[position]
+
+        holder.bind(sets)
     }
 
     override fun getItemCount(): Int = differ.currentList.size

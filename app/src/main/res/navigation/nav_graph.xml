@@ -20,7 +20,7 @@
         android:id="@+id/exerciseInfoFragment"
         android:name="com.example.move.ui.fragments.ExerciseInfoFragment"
         android:label="fragment_second"
-        tools:layout="@layout/exercise_info_recyclerview" >
+        tools:layout="@layout/fragment_exercise_info" >
         <argument
             android:name="exercise"
             app:argType="com.example.move.models.ExerciseItem" />
@@ -56,5 +56,5 @@
         android:id="@+id/workoutHistoryFragment"
         android:name="com.example.move.ui.fragments.WorkoutHistoryFragment"
         android:label="fragment_item_list"
-        tools:layout="@layout/fragment_item_list" />
+        tools:layout="@layout/fragment_workout_history" />
 </navigation>

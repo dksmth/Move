@@ -5,14 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.move.databinding.CardsForWorkoutHistoryBinding
+import com.example.move.databinding.WorkoutHistoryRvItemBinding
 import com.example.move.models.BlocksWithDateTime
 
 
 class WorkoutHistoryAdapter :
     RecyclerView.Adapter<WorkoutHistoryAdapter.ViewHolder>() {
 
-    inner class ViewHolder(binding: CardsForWorkoutHistoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(binding: WorkoutHistoryRvItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val body = binding.workoutBody
         val workoutName = binding.tvDate
         val bestSet = binding.bestSetsColumn
@@ -32,7 +32,7 @@ class WorkoutHistoryAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            CardsForWorkoutHistoryBinding.inflate(
+            WorkoutHistoryRvItemBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false

@@ -8,11 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.move.adapters.ExerciseHistoryAdapter
-import com.example.move.adapters.HeaderAdapter
-import com.example.move.databinding.ExerciseInfoRecyclerviewBinding
+import com.example.move.databinding.FragmentExerciseInfoBinding
 import com.example.move.models.ExerciseItem
 import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ExerciseInfoFragment : Fragment() {
 
-    private var _binding: ExerciseInfoRecyclerviewBinding? = null
+    private var _binding: FragmentExerciseInfoBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: WorkoutHistoryViewModel by viewModels()
@@ -34,7 +33,7 @@ class ExerciseInfoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = ExerciseInfoRecyclerviewBinding.inflate(inflater, container, false)
+        _binding = FragmentExerciseInfoBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -43,7 +42,8 @@ class ExerciseInfoFragment : Fragment() {
 
         val exercise = args.exercise
 
-        setupAdapter(exercise)
+        setupViews(exercise)
+        setupAdapter()
 
         viewModel.getExerciseHistory(exercise)
 
@@ -52,13 +52,30 @@ class ExerciseInfoFragment : Fragment() {
         }
     }
 
-    private fun setupAdapter(exercise: ExerciseItem) {
+    private fun setupViews(exercise: ExerciseItem) {
+        binding.apply {
+            tvBodypart.text = exercise.bodyPart
+            tvMuscleHere.text = exercise.target
+            tvEquipmentHere.text = exercise.equipment
+            topAppBar.title = exercise.name
+
+            topAppBar.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
+
+            Glide.with(binding.ivExerciseGif)
+                .asGif()
+                .centerCrop()
+                .load(exercise.gifUrl)
+                .into(binding.ivExerciseGif)
+        }
+    }
+
+    private fun setupAdapter() {
         exerciseHistoryAdapter = ExerciseHistoryAdapter()
 
-        binding.root.apply {
-            adapter = ConcatAdapter(HeaderAdapter(exercise).apply {
-                navigateBack = { findNavController().popBackStack() }
-            }, exerciseHistoryAdapter)
+        binding.rvExerciseHistory.apply {
+            adapter = exerciseHistoryAdapter
             layoutManager = LinearLayoutManager(activity)
         }
     }
