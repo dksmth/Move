@@ -1,9 +1,10 @@
-package com.example.move.adapters
+package com.example.move.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -24,7 +25,7 @@ class BlockAdapter : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
     inner class BlockViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvName: TextView = itemView.findViewById(R.id.tvName)
         val rvExercise: RecyclerView = itemView.findViewById(R.id.rvExercise)
-        val btDelete: Button = itemView.findViewById(R.id.btDeleteButton)
+        val btDelete: ImageButton = itemView.findViewById(R.id.btDeleteButton)
         val btAddSet: Button = itemView.findViewById(R.id.btAddSet)
     }
 
@@ -43,7 +44,7 @@ class BlockAdapter : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): BlockAdapter.BlockViewHolder {
+    ): BlockViewHolder {
         return BlockViewHolder(
             LayoutInflater.from(parent.context).inflate(
                 R.layout.item_exercise_block,
@@ -53,7 +54,7 @@ class BlockAdapter : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
         )
     }
 
-    override fun onBindViewHolder(holder: BlockAdapter.BlockViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BlockViewHolder, position: Int) {
         val block = differ.currentList[position]
 
         val setAdapter = SetAdapter().apply {
@@ -62,7 +63,7 @@ class BlockAdapter : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
 
         holder.apply {
             rvExercise.adapter = setAdapter
-            tvName.text = block.exercise?.name
+            tvName.text = block.exercise.name
 
             btDelete.setOnClickListener {
                 deleteExerciseListener?.invoke(block)

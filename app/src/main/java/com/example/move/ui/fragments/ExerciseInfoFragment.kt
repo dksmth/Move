@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.move.adapters.ExerciseHistoryAdapter
+import com.example.move.ui.adapters.ExerciseHistoryAdapter
 import com.example.move.databinding.FragmentExerciseInfoBinding
 import com.example.move.models.ExerciseItem
 import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
@@ -26,7 +26,7 @@ class ExerciseInfoFragment : Fragment() {
 
     private val args: ExerciseInfoFragmentArgs by navArgs()
 
-    lateinit var exerciseHistoryAdapter: ExerciseHistoryAdapter
+    private val exerciseHistoryAdapter: ExerciseHistoryAdapter = ExerciseHistoryAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,13 +39,12 @@ class ExerciseInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val exercise = args.exercise
+
+        viewModel.getExerciseHistory(exercise)
 
         setupViews(exercise)
         setupAdapter()
-
-        viewModel.getExerciseHistory(exercise)
 
         viewModel.historyOfExercise.observe(viewLifecycleOwner) { listOfExercise ->
             exerciseHistoryAdapter.differ.submitList(listOfExercise)
@@ -72,8 +71,6 @@ class ExerciseInfoFragment : Fragment() {
     }
 
     private fun setupAdapter() {
-        exerciseHistoryAdapter = ExerciseHistoryAdapter()
-
         binding.rvExerciseHistory.apply {
             adapter = exerciseHistoryAdapter
             layoutManager = LinearLayoutManager(activity)

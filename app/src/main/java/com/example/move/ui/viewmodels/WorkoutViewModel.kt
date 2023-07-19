@@ -14,7 +14,8 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class WorkoutViewModel @Inject constructor(private val exercisesRepository: ExercisesRepository) : ViewModel() {
+class WorkoutViewModel @Inject constructor(private val exercisesRepository: ExercisesRepository) :
+    ViewModel() {
 
     var _workout: MutableLiveData<List<Block>> = MutableLiveData(listOf())
     val workout: List<Block>?
@@ -49,10 +50,7 @@ class WorkoutViewModel @Inject constructor(private val exercisesRepository: Exer
         var returnedNumber = 0.0
 
         if (value.isNotBlank()) {
-            returnedNumber = value.toDouble()
-            if (returnedNumber > 1000) {
-                returnedNumber = 1000.0
-            }
+            returnedNumber = if (value.toDouble() > 1000) 1000.0 else value.toDouble()
         }
 
         val chosenBlock = _workout.value?.find { it == block }
@@ -74,7 +72,12 @@ class WorkoutViewModel @Inject constructor(private val exercisesRepository: Exer
         _workout.value = listOf()
     }
 
-    fun canBeFinished(): Boolean = workout?.isNotEmpty() ?: false
+    fun canBeFinished(): Boolean {
+        return workout?.isNotEmpty() ?: false
+                && workout?.none { it.listOfSets.isEmpty() } ?: false
+                && workout?.none {
+                block -> block.listOfSets.any { set -> set.reps == 0 || set.weight == 0.0 } } == true
+    }
 
     fun getWorkoutInfo(): String = workout.toString()
 

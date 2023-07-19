@@ -1,4 +1,4 @@
-package com.example.move.adapters
+package com.example.move.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View

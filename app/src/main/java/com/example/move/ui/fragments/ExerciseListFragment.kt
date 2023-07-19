@@ -14,7 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.coroutineScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.move.adapters.ExercisesAdapter
+import com.example.move.ui.adapters.ExercisesAdapter
 import com.example.move.databinding.FragmentExercisesBinding
 import com.example.move.models.ExerciseItem
 import com.example.move.ui.viewmodels.ExercisesViewModel

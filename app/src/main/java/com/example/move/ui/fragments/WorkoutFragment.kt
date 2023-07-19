@@ -4,12 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.move.adapters.BlockAdapter
+import com.example.move.ui.adapters.BlockAdapter
 import com.example.move.databinding.FragmentWorkoutBinding
 import com.example.move.ui.viewmodels.WorkoutViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,14 +21,14 @@ class WorkoutFragment : Fragment() {
 
     private val workoutViewModel: WorkoutViewModel by activityViewModels()
 
-    lateinit var blockAdapter: BlockAdapter
+    private val blockAdapter: BlockAdapter = BlockAdapter()
 
     private var _binding: FragmentWorkoutBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentWorkoutBinding.inflate(inflater, container, false)
 
@@ -61,7 +62,7 @@ class WorkoutFragment : Fragment() {
             endWorkout()
         }
 
-        blockAdapter.changeSetListener  = { block, strings ->
+        blockAdapter.changeSetListener = { block, strings ->
             workoutViewModel.changeSet(block, strings)
         }
 
@@ -81,6 +82,12 @@ class WorkoutFragment : Fragment() {
 
             workoutViewModel.endWorkout()
             navigateToEndScreen(workoutInfo)
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Cant end workout - unfinished sets",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -97,7 +104,6 @@ class WorkoutFragment : Fragment() {
     }
 
     private fun setupBlockAdapter() {
-        blockAdapter = BlockAdapter()
         binding.rvBlocks.apply {
             adapter = blockAdapter
             layoutManager = LinearLayoutManager(activity)

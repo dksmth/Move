@@ -6,14 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.move.adapters.WorkoutHistoryAdapter
 import com.example.move.databinding.FragmentWorkoutHistoryBinding
+import com.example.move.ui.adapters.WorkoutHistoryAdapter
 import com.example.move.ui.viewmodels.WorkoutHistoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class WorkoutHistoryFragment : Fragment() {
@@ -23,7 +20,7 @@ class WorkoutHistoryFragment : Fragment() {
 
     private val viewModel: WorkoutHistoryViewModel by viewModels()
 
-    private lateinit var workoutsAdapter: WorkoutHistoryAdapter
+    private val workoutsAdapter = WorkoutHistoryAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,13 +29,12 @@ class WorkoutHistoryFragment : Fragment() {
         _binding = FragmentWorkoutHistoryBinding.inflate(inflater, container, false)
 
         setupBlockAdapter()
+        viewModel.getAllWorkouts()
 
         return binding.root
     }
 
     private fun setupBlockAdapter() {
-        workoutsAdapter = WorkoutHistoryAdapter()
-
         binding.root.apply {
             adapter = workoutsAdapter
             layoutManager = LinearLayoutManager(activity)
@@ -47,10 +43,6 @@ class WorkoutHistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.getAllWorkouts()
-        }
 
         viewModel.mapWorkoutToBlocks.observe(viewLifecycleOwner) { map ->
             workoutsAdapter.differ.submitList(map)
