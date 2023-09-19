@@ -1,14 +1,9 @@
-package com.example.move.api
+package com.example.move.data.remote
 
-import com.example.move.models.Exercise
 import com.example.move.models.ExerciseItem
-import com.example.move.util.Constants.Companion.API_HOST
-import com.example.move.util.Constants.Companion.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Headers
-import retrofit2.http.Query
 
 interface ExerciseAPI {
 

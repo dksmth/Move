@@ -2,12 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <item android:id="@+id/exerciseListFragment"
-        android:title="@string/exercisesBottomNavigatonLabel"
-         />
+    <item
+        android:id="@+id/exerciseListFragment"
+        android:icon="@drawable/exercise_icon"
+        android:title="@string/exercisesBottomNavigationLabel" />
 
-    <item android:id="@+id/workoutFragment"
-        android:title="@string/workoutBottomNavigationLabel"
-         />
+    <item
+        android:id="@+id/workoutFragment"
+        android:icon="@drawable/new_workout_icon"
+        android:title="@string/workoutBottomNavigationLabel" />
+
+    <item
+        android:id="@+id/workoutHistoryFragment"
+        android:icon="@drawable/workout_history_icon"
+        android:title="@string/workoutHistoryBottomNavigationLabel" />
 
 </menu>

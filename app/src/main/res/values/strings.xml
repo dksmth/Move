@@ -9,11 +9,33 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="exercisesBottomNavigatonLabel">Exercises</string>
-<!-- TODO: Remove or change this placeholder text -->
+    <string name="exercisesBottomNavigationLabel">Exercises</string>
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="workoutBottomNavigationLabel">New Workout</string>
     <string name="bodypart">Bodypart</string>
-    <string name="equipment">Equipment needed</string>
+    <string name="equipment">Equipment</string>
     <string name="targetMuscle">Target Muscle</string>
+    <string name="btAdd">Add exercise</string>
+    <string name="tvTitleOfExercise">Exercise</string>
+    <string name="numberOfSets">1</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="save_workout">Save Workout</string>
+    <string name="btAddSet">ADD SET</string>
+    <string name="tvWorkoutFinished">You have finished your workout!</string>
+    <string name="btGoBack">Go back to the exercises</string>
+    <string name="edittextWeightHint">Weight</string>
+    <string name="edittextRepsHint">Repetitions</string>
+    <string name="workoutHistoryBottomNavigationLabel">Workout History</string>
+    <string name="btDeleteExerciseContentDescription">Click this to remove exercise from workout</string>
+    <string name="sets_done">Sets Done</string>
+    <string name="instructions_lorem_ipsum">"1) Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \n2) Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n3) Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</string>
+    <string name="instructions_label">Instructions</string>
+    <string name="gif_description">GIF showing how to perform this specific exercise</string>
+    <string name="one_rep_max">1RM</string>
+    <string name="dateInWorkoutHistoryCard">Weekday, Month 3</string>
+    <string name="exerciseLabelInWorkoutHistory">Exercise</string>
+    <string name="setLabelWorkoutHistory">Best Set</string>
+    <string name="exerciseHistoryLabel">Exercise History</string>
+    <string name="setsInfo">%1s kg x %2d </string>
 </resources>

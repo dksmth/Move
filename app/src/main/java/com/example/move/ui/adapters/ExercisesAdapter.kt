@@ -1,4 +1,4 @@
-package com.example.move.adapters
+package com.example.move.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -56,6 +56,7 @@ class ExercisesAdapter: RecyclerView.Adapter<ExercisesAdapter.ExerciseViewHolder
             tvName.text = exercise.name
             tvMuscleGroup.text = exercise.bodyPart
         }
+
         holder.itemView.setOnClickListener {
                 onItemClickListener?.let { it(exercise) }
             }
@@ -65,11 +66,10 @@ class ExercisesAdapter: RecyclerView.Adapter<ExercisesAdapter.ExerciseViewHolder
         exercise: ExerciseItem,
         holder: ExerciseViewHolder
     ) {
-        val gifUrlHttpsWrapped = "https" + exercise.gifUrl.removeRange(IntRange(0, 3))
         Glide.with(holder.itemView)
-            .asGif()
+            .asBitmap()
             .timeout(6000)
-            .load(gifUrlHttpsWrapped)
+            .load(exercise.gifUrl)
             .into(ivGif)
     }
 

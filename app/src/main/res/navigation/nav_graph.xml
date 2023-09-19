@@ -11,7 +11,10 @@
         tools:layout="@layout/fragment_exercises" >
         <action
             android:id="@+id/action_exerciseListFragment_to_exerciseInfoFragment"
-            app:destination="@id/exerciseInfoFragment" />
+            app:destination="@id/exerciseInfoFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:popUpTo="@id/exerciseListFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/exerciseInfoFragment"
@@ -26,5 +29,32 @@
         android:id="@+id/workoutFragment"
         android:name="com.example.move.ui.fragments.WorkoutFragment"
         android:label="fragment_workout"
-        tools:layout="@layout/fragment_workout" />
+        tools:layout="@layout/fragment_workout" >
+        <action
+            android:id="@+id/action_workoutFragment_to_workoutFinishedFragment"
+            app:destination="@id/workoutFinishedFragment"
+            app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_workoutFragment_to_exerciseListFragment"
+            app:destination="@id/exerciseListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/workoutFinishedFragment"
+        android:name="com.example.move.ui.fragments.WorkoutFinishedFragment"
+        android:label="fragment_workout_finished"
+        tools:layout="@layout/fragment_workout_finished" >
+        <argument
+            android:name="lastWorkoutInfo"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_workoutFinishedFragment_to_workoutHistoryFragment"
+            app:destination="@id/workoutHistoryFragment"
+            app:popUpTo="@id/workoutFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/workoutHistoryFragment"
+        android:name="com.example.move.ui.fragments.WorkoutHistoryFragment"
+        android:label="fragment_item_list"
+        tools:layout="@layout/fragment_workout_history" />
 </navigation>
