@@ -37,4 +37,5 @@
     <string name="exerciseLabelInWorkoutHistory">Exercise</string>
     <string name="setLabelWorkoutHistory">Best Set</string>
     <string name="exerciseHistoryLabel">Exercise History</string>
+    <string name="setsInfo">%1s kg x %2d </string>
 </resources>

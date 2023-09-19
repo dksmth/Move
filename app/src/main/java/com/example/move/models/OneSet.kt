@@ -13,11 +13,13 @@ data class OneSet(
     val oneRepMax: Double
         get() = calculateOneRepMax()
 
+    // Brzycki one rep max formula for <10 reps and Epley one rep max formula for >10
+
     private fun calculateOneRepMax(): Double {
         return if (reps < 10) {
-            weight * (36.0 / (37.0 - reps))
+            weight * (BRYZCKI_FORMULA_NUMERATOR / (BRYZCKI_FORMULA_DENOMINATOR - reps))
         } else {
-            weight * (1 + reps.toDouble() / 30.0)
+            weight * (1 + reps.toDouble() / EPLEY_FORMULA_DENOMINATOR)
         }
     }
 
@@ -25,4 +27,9 @@ data class OneSet(
         return "Set(weight=$weight, reps=$reps)"
     }
 
+    companion object {
+        const val BRYZCKI_FORMULA_NUMERATOR = 36.0
+        const val BRYZCKI_FORMULA_DENOMINATOR = 37.0
+        const val EPLEY_FORMULA_DENOMINATOR = 30.0
+    }
 }

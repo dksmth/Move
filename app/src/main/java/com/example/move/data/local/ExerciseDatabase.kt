@@ -10,7 +10,7 @@ import com.example.move.models.WorkoutBlockCrossRef
 
 @Database(
     entities = [ExerciseItem::class, Workout::class, Block::class, WorkoutBlockCrossRef::class],
-    version = 14,
+    version = 16,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

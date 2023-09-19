@@ -1,7 +1,6 @@
 package com.example.move.ui.adapters
 
 import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.move.R
 import com.example.move.models.OneSet
+import com.example.move.util.SimpleTextWatcher
 import com.example.move.util.trimLastIf
 
 class SetAdapter : RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
@@ -27,21 +27,14 @@ class SetAdapter : RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
         val reps: EditText = itemView.findViewById(R.id.etReps)
         val btDelete: ImageButton = itemView.findViewById(R.id.btDeleteSet)
 
-        fun addListener(inputField: EditText, isReps: Boolean) {
-            inputField.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                    val typeName = if (isReps) "reps" else "weight"
+        fun addListener(inputField: EditText, typeName: String) {
+            inputField.addTextChangedListener(object : SimpleTextWatcher() {
+                override fun afterTextChanged(s: Editable) {
 
                     val textPositionValue =
                         listOf(
-                            p0.toString(),
-                            this@SetViewHolder.adapterPosition.toString(),
+                            s.toString(),
+                            this@SetViewHolder.layoutPosition.toString(),
                             typeName
                         )
 
@@ -79,7 +72,7 @@ class SetAdapter : RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
 
     override fun onBindViewHolder(holder: SetViewHolder, position: Int) {
         val set = differ.currentList[position]
-        val positionForPublic = holder.adapterPosition + 1
+        val positionForPublic = holder.bindingAdapterPosition + 1
 
         holder.apply {
 
@@ -92,11 +85,11 @@ class SetAdapter : RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
                 deleteSetListener?.invoke(position)
             }
 
-            addListener(weight, isReps = false)
-            addListener(reps, isReps = true)
+            addListener(weight, "weight")
+            addListener(reps, "reps")
         }
 
     }
 
-
 }
+

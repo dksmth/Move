@@ -10,23 +10,22 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.move.R
+import com.example.move.databinding.ItemExerciseBlockBinding
 import com.example.move.models.Block
 
-class BlockAdapter : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
+class BlockAdapter(
+    var deleteExerciseListener: ((Block) -> Unit),
+    var addSetListener: ((Block) -> Unit),
+    var changeSetListener: ((Block, List<String>) -> Unit),
+    var deleteSetListener: ((Block, Int) -> Unit),
+) : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
 
-    var deleteExerciseListener: ((Block) -> Unit)? = null
-
-    var addSetListener: ((Block) -> Unit)? = null
-
-    var changeSetListener: ((Block, List<String>) -> Unit)? = null
-
-    var deleteSetListener: ((Block, Int) -> Unit)? = null
-
-    inner class BlockViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvName: TextView = itemView.findViewById(R.id.tvName)
-        val rvExercise: RecyclerView = itemView.findViewById(R.id.rvExercise)
-        val btDelete: ImageButton = itemView.findViewById(R.id.btDeleteButton)
-        val btAddSet: Button = itemView.findViewById(R.id.btAddSet)
+    class BlockViewHolder(binding: ItemExerciseBlockBinding) : RecyclerView.ViewHolder(binding.root) {
+        val tvName: TextView = binding.tvName
+        val rvExercise: RecyclerView = binding.rvExercise
+        val btDelete: ImageButton = binding.btDeleteButton
+        val btAddSet: Button = binding.btAddSet
+        val setAdapter = SetAdapter()
     }
 
     private val differCallback = object : DiffUtil.ItemCallback<Block>() {
@@ -46,8 +45,8 @@ class BlockAdapter : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
         viewType: Int,
     ): BlockViewHolder {
         return BlockViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.item_exercise_block,
+            ItemExerciseBlockBinding.inflate(
+                LayoutInflater.from(parent.context),
                 parent,
                 false
             )
@@ -57,28 +56,28 @@ class BlockAdapter : RecyclerView.Adapter<BlockAdapter.BlockViewHolder>() {
     override fun onBindViewHolder(holder: BlockViewHolder, position: Int) {
         val block = differ.currentList[position]
 
-        val setAdapter = SetAdapter().apply {
-            differ.submitList(block.listOfSets)
-        }
+        holder.setAdapter.differ.submitList(block.listOfSets)
 
         holder.apply {
             rvExercise.adapter = setAdapter
             tvName.text = block.exercise.name
 
             btDelete.setOnClickListener {
-                deleteExerciseListener?.invoke(block)
+                deleteExerciseListener.invoke(block)
             }
 
             btAddSet.setOnClickListener {
-                addSetListener?.invoke(block)
+                addSetListener.invoke(block)
+                notifyItemChanged(differ.currentList.indexOf(block))
             }
 
             setAdapter.changeSetListener = { setInfo ->
-                changeSetListener?.invoke(block, setInfo)
+                changeSetListener.invoke(block, setInfo)
             }
 
             setAdapter.deleteSetListener = { position ->
-                deleteSetListener?.invoke(block, position)
+                deleteSetListener.invoke(block, position)
+                notifyItemChanged(differ.currentList.indexOf(block))
             }
         }
     }

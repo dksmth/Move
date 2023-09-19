@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.move.ui.adapters.BlockAdapter
 import com.example.move.databinding.FragmentWorkoutBinding
+import com.example.move.models.Block
 import com.example.move.ui.viewmodels.WorkoutViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -21,7 +22,6 @@ class WorkoutFragment : Fragment() {
 
     private val workoutViewModel: WorkoutViewModel by activityViewModels()
 
-    private val blockAdapter: BlockAdapter = BlockAdapter()
 
     private var _binding: FragmentWorkoutBinding? = null
     private val binding get() = _binding!!
@@ -38,19 +38,20 @@ class WorkoutFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupBlockAdapter()
+        val blockAdapter = BlockAdapter(
+            addSetListener = { workoutViewModel.addSet(it) },
+            deleteSetListener = { block, i -> workoutViewModel.deleteSet(block, i) },
+            deleteExerciseListener = { workoutViewModel.deleteExercise(it) },
+
+            changeSetListener = { block: Block, strings: List<String> ->
+                workoutViewModel.changeSet(block, strings)
+            }
+        )
+
+        setupBlockAdapter(blockAdapter)
 
         workoutViewModel._workout.observe(viewLifecycleOwner) { workout ->
             blockAdapter.differ.submitList(workout)
-        }
-
-        blockAdapter.addSetListener = { block ->
-            workoutViewModel.addSet(block)
-            blockAdapter.notifyItemChanged(blockAdapter.differ.currentList.indexOf(block))
-        }
-
-        blockAdapter.deleteExerciseListener = {
-            workoutViewModel.deleteExercise(it)
         }
 
         binding.btAddExercise.setOnClickListener {
@@ -60,15 +61,6 @@ class WorkoutFragment : Fragment() {
 
         binding.btSaveWorkout.setOnClickListener {
             endWorkout()
-        }
-
-        blockAdapter.changeSetListener = { block, strings ->
-            workoutViewModel.changeSet(block, strings)
-        }
-
-        blockAdapter.deleteSetListener = { block, i ->
-            workoutViewModel.deleteSet(block, i)
-            blockAdapter.notifyItemChanged(blockAdapter.differ.currentList.indexOf(block))
         }
     }
 
@@ -103,7 +95,7 @@ class WorkoutFragment : Fragment() {
         )
     }
 
-    private fun setupBlockAdapter() {
+    private fun setupBlockAdapter(blockAdapter: BlockAdapter) {
         binding.rvBlocks.apply {
             adapter = blockAdapter
             layoutManager = LinearLayoutManager(activity)
