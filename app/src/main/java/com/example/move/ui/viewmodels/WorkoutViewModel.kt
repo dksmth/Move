@@ -1,5 +1,6 @@
 package com.example.move.ui.viewmodels
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.move.models.Block
@@ -17,15 +18,20 @@ import javax.inject.Inject
 class WorkoutViewModel @Inject constructor(private val exercisesRepository: ExercisesRepository) :
     ViewModel() {
 
-    var _workout: MutableLiveData<List<Block>> = MutableLiveData(listOf())
-    val workout: List<Block>?
-        get() = _workout.value
+    private val _workout = MutableLiveData<List<Block>>()
+    val workout: LiveData<List<Block>>
+        get() = _workout
 
     var openedForResult = false
 
     fun addExercise(exercise: ExerciseItem) {
         val time = getWeekdayAndDate()
-        _workout.value = _workout.value?.plus(Block(exercise = exercise, dateTime = time))
+
+        _workout.value = if (_workout.value == null) {
+            listOf(Block(exercise = exercise, dateTime = time))
+        } else {
+            _workout.value?.plus(Block(exercise = exercise, dateTime = time))
+        }
 
         setFlagForOpeningWithResult(false)
     }
@@ -56,9 +62,9 @@ class WorkoutViewModel @Inject constructor(private val exercisesRepository: Exer
         val chosenBlock = _workout.value?.find { it == block }
 
         if (type == "weight") {
-            chosenBlock!!.listOfSets[position.toInt()].weight = returnedNumber
+            chosenBlock?.let { it.listOfSets[position.toInt()].weight = returnedNumber }
         } else {
-            chosenBlock!!.listOfSets[position.toInt()].reps = returnedNumber.toInt()
+            chosenBlock?.let { it.listOfSets[position.toInt()].reps = returnedNumber.toInt() }
         }
     }
 
@@ -73,15 +79,17 @@ class WorkoutViewModel @Inject constructor(private val exercisesRepository: Exer
     }
 
     fun canBeFinished(): Boolean {
-        return workout?.isNotEmpty() ?: false
-                && workout?.none { it.listOfSets.isEmpty() } ?: false
-                && workout?.none {
-                block -> block.listOfSets.any { set -> set.reps == 0 || set.weight == 0.0 } } == true
+        val blocksList = workout.value
+
+        return blocksList?.isNotEmpty() ?: false
+                && blocksList?.none { it.listOfSets.isEmpty() } ?: false
+                && blocksList?.none { block -> block.listOfSets.any { set -> set.reps == 0 || set.weight == 0.0 } } == true
     }
 
     fun getWorkoutInfo(): String = workout.toString()
 
-    fun isInWorkout(exercise: ExerciseItem): Boolean = workout?.any { it.exercise == exercise }!!
+    fun isInWorkout(exercise: ExerciseItem): Boolean =
+        workout.value?.any { it.exercise == exercise } == true
 
     suspend fun insertWorkout() {
         val blocksToSave = _workout.value

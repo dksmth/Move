@@ -1,7 +1,6 @@
 package com.example.move.ui.adapters
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,15 +8,15 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.move.R
+import com.example.move.databinding.ItemExerciseBinding
 import com.example.move.models.ExerciseItem
 
 class ExercisesAdapter: RecyclerView.Adapter<ExercisesAdapter.ExerciseViewHolder>() {
 
-    inner class ExerciseViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        val ivGif: ImageView = itemView.findViewById(R.id.ivExerciseGif)
-        val tvName: TextView = itemView.findViewById(R.id.tvName)
-        val tvMuscleGroup: TextView = itemView.findViewById(R.id.tvMuscleGroup)
+    inner class ExerciseViewHolder(binding: ItemExerciseBinding): RecyclerView.ViewHolder(binding.root) {
+        val ivGif: ImageView = binding.ivExerciseGif
+        val tvName: TextView = binding.tvName
+        val tvMuscleGroup: TextView = binding.tvMuscleGroup
     }
 
     private val differCallback = object : DiffUtil.ItemCallback<ExerciseItem>() {
@@ -34,8 +33,8 @@ class ExercisesAdapter: RecyclerView.Adapter<ExercisesAdapter.ExerciseViewHolder
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExerciseViewHolder {
         return ExerciseViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.item_exercise,
+            ItemExerciseBinding.inflate(
+                LayoutInflater.from(parent.context),
                 parent,
                 false
             )
@@ -50,7 +49,6 @@ class ExercisesAdapter: RecyclerView.Adapter<ExercisesAdapter.ExerciseViewHolder
         val exercise = differ.currentList[position]
 
         holder.apply {
-
             loadImageInView(exercise, holder)
 
             tvName.text = exercise.name

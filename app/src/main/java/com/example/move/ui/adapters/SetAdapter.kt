@@ -2,7 +2,6 @@ package com.example.move.ui.adapters
 
 import android.text.Editable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
@@ -10,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.move.R
+import com.example.move.databinding.ItemSetsBinding
 import com.example.move.models.OneSet
 import com.example.move.util.SimpleTextWatcher
 import com.example.move.util.trimLastIf
@@ -21,11 +20,11 @@ class SetAdapter : RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
 
     var deleteSetListener: ((Int) -> Unit)? = null
 
-    inner class SetViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val setNumber: TextView = itemView.findViewById(R.id.tvNumberOfSets)
-        var weight: EditText = itemView.findViewById(R.id.etWeight)
-        val reps: EditText = itemView.findViewById(R.id.etReps)
-        val btDelete: ImageButton = itemView.findViewById(R.id.btDeleteSet)
+    inner class SetViewHolder(binding: ItemSetsBinding) : RecyclerView.ViewHolder(binding.root) {
+        val setNumber: TextView = binding.tvNumberOfSets
+        var weight: EditText = binding.etWeight
+        val reps: EditText = binding.etReps
+        val btDelete: ImageButton = binding.btDeleteSet
 
         fun addListener(inputField: EditText, typeName: String) {
             inputField.addTextChangedListener(object : SimpleTextWatcher() {
@@ -58,8 +57,8 @@ class SetAdapter : RecyclerView.Adapter<SetAdapter.SetViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SetViewHolder {
         return SetViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.item_sets,
+            ItemSetsBinding.inflate(
+                LayoutInflater.from(parent.context),
                 parent,
                 false
             )
